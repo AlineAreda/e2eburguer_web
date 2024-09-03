@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent, SetStateAction } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import Head from 'next/head';
 import styles from './styles.module.scss';
 import { Header } from '../../components/Header';
@@ -21,21 +21,17 @@ interface CategoryProps {
 }
 
 export default function Product({ categoryList }: CategoryProps) {
-
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
 
-
   const [avatarUrl, setAvatarUrl] = useState('');
   const [imageAvatar, setImageAvatar] = useState<File | null>(null);
 
-  const [categories, setCategories] = useState(categoryList || [])
-  const [categorySelected, setCategorySelected] = useState(0)
-
+  const [categories, setCategories] = useState(categoryList || []);
+  const [categorySelected, setCategorySelected] = useState(0);
 
   function handleFile(e: ChangeEvent<HTMLInputElement>) {
-
     if (!e.target.files) {
       return;
     }
@@ -46,15 +42,11 @@ export default function Product({ categoryList }: CategoryProps) {
       return;
     }
 
-    if (image.type === 'image/jpeg' || image.type === 'image/png' || image.type === 'iimage/webp') {
-
+    if (image.type === 'image/jpeg' || image.type === 'image/png' || image.type === 'image/webp') {
       setImageAvatar(image);
-      setAvatarUrl(URL.createObjectURL(e.target.files[0]))
-
+      setAvatarUrl(URL.createObjectURL(image));
     }
-
   }
-
 
   function handleChangeCategory(event: ChangeEvent<HTMLSelectElement>) {
     setCategorySelected(Number(event.target.value));
@@ -62,13 +54,14 @@ export default function Product({ categoryList }: CategoryProps) {
 
   async function handleRegister(event: FormEvent) {
     event.preventDefault();
+
+    if (name === '' || price === '' || description === '' || imageAvatar === null) {
+      toast.error("Preencha todos os campos!");
+      return;
+    }
+
     try {
       const data = new FormData();
-
-      if (name === '' || price === '' || description === '' || imageAvatar === null) {
-        toast.error("Preencha todos os campos!")
-        return;
-      }
 
       data.append('name', name);
       data.append('price', price);
@@ -80,20 +73,18 @@ export default function Product({ categoryList }: CategoryProps) {
 
       await apiClient.post('/product', data);
 
-      toast.success('Produto Cadastrado com sucesso!');
+      toast.success('Produto cadastrado com sucesso!');
+
+      setName('');
+      setPrice('');
+      setDescription('');
+      setImageAvatar(null);
+      setAvatarUrl('');
 
     } catch (err) {
-      console.log(err);
-      toast.error("Ops...Erro ao cadastrar!")
-
+      console.error(err);
+      toast.error("Ops... Erro ao cadastrar!");
     }
-
-    setName('');
-    setPrice('');
-    setDescription('');
-    setImageAvatar(null);
-    setAvatarUrl('');
-
   }
 
   return (
@@ -125,18 +116,14 @@ export default function Product({ categoryList }: CategoryProps) {
                   height={250}
                 />
               )}
-
             </label>
 
-
-            <select value={categorySelected} onChange={handleChangeCategory} >
-              {categories.map((item, index) => {
-                return (
-                  <option key={item.id} value={index}>
-                    {item.name}
-                  </option>
-                )
-              })}
+            <select value={categorySelected} onChange={handleChangeCategory}>
+              {categories.map((item, index) => (
+                <option key={item.id} value={index}>
+                  {item.name}
+                </option>
+              ))}
             </select>
 
             <input
@@ -170,22 +157,20 @@ export default function Product({ categoryList }: CategoryProps) {
             </button>
 
           </form>
-
         </main>
-
       </div>
     </>
-  )
+  );
 }
 
-export const getServerSideProps = canSSRAuth(async () => {
-  const apiClient = setupAPIClient(undefined)
+export const getServerSideProps = canSSRAuth(async (ctx) => {
+  const apiClient = setupAPIClient(ctx);
 
   const response = await apiClient.get('/category/list');
 
   return {
     props: {
-      categoryList: response.data
-    }
-  }
-})
+      categoryList: response.data,
+    },
+  };
+});

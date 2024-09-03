@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { GetServerSidePropsContext } from 'next';
 import { canSSRAuth } from '../../utils/canSSRAuth';
 import Head from 'next/head';
 import styles from './styles.module.scss';
@@ -11,6 +11,7 @@ import { setupAPIClient } from '../../services/api';
 import { ModalOrder } from '../../components/ModalOrder';
 
 import Modal from 'react-modal';
+import { useState, useEffect } from 'react';
 
 type OrderProps = {
     id: string;
@@ -156,8 +157,9 @@ export default function Dashboard({ orders }: HomeProps) {
     )
 }
 
-export const getServerSideProps = canSSRAuth(async () => {
-    const apiClient = setupAPIClient();
+
+export const getServerSideProps = canSSRAuth(async (ctx: GetServerSidePropsContext) => {
+    const apiClient = setupAPIClient(ctx);
 
     const response = await apiClient.get('/orders');
 
@@ -167,3 +169,4 @@ export const getServerSideProps = canSSRAuth(async () => {
         }
     }
 });
+
