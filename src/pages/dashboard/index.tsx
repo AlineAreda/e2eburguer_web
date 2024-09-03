@@ -156,8 +156,8 @@ export default function Dashboard({ orders }: HomeProps) {
     )
 }
 
-export const getServerSideProps = canSSRAuth(async (ctx) => {
-    const apiClient = setupAPIClient(ctx);
+export const getServerSideProps = canSSRAuth(async () => {
+    const apiClient = setupAPIClient();
 
     const response = await apiClient.get('/orders');
 
