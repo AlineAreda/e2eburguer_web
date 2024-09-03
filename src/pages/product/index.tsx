@@ -55,7 +55,7 @@ export default function Product({ categoryList }: CategoryProps) {
 
   }
 
-  //Quando você seleciona uma nova categoria na lista
+
   function handleChangeCategory(event: ChangeEvent<HTMLSelectElement>) {
     setCategorySelected(Number(event.target.value));
   }

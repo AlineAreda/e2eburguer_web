@@ -2,7 +2,7 @@ import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult
 import { parseCookies, destroyCookie } from 'nookies';
 import { AuthTokenError } from '../services/errors/AuthTokenError';
 
-// Função para páginas que só usuários logados podem acessar.
+
 export function canSSRAuth<P extends { [key: string]: any }>(fn: GetServerSideProps<P>) {
     return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
         const cookies = parseCookies(ctx);
@@ -31,14 +31,13 @@ export function canSSRAuth<P extends { [key: string]: any }>(fn: GetServerSidePr
                 };
             }
 
-            // Re-throw any other errors for further handling
+
             throw err;
         }
     };
 }
 
 export function isAuthenticated() {
-  // Supondo que o token esteja armazenado em cookies ou localStorage
   const token = localStorage.getItem('@nextauth.token'); // ou use cookies se preferir
   return !!token;
 }
