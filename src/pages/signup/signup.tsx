@@ -26,10 +26,10 @@ export default function SignUp() {
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     return password.length >= minLength &&
-           password.length <= maxLength &&
-           hasUpperCase &&
-           hasNumber &&
-           hasSpecialChar;
+          password.length <= maxLength &&
+          hasUpperCase &&
+          hasNumber &&
+          hasSpecialChar;
   }
 
   async function handleSignUp(event: FormEvent) {
