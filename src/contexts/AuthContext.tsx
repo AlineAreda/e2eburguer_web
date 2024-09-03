@@ -114,8 +114,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       Router.push("/");
     } catch (err) {
-      toast.error("Erro ao cadastrar!");
-      console.log("Erro ao cadastrar ", err);
+      toast.error("Erro ao realizar cadastro.Tente novamente ou verifique um outro e-mail.");
+      console.log("Erro ao realizar cadastro.Tente novamente ou verifique um outro e-mail. ", err);
     }
   }
 

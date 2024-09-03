@@ -24,7 +24,7 @@ export default function Category() {
         const apiClient = setupAPIClient();
         
         try {
-            setLoading(true); // Iniciar o carregamento
+            setLoading(true);
             await apiClient.post('/category', { name });
 
             toast.success('Categoria cadastrada com sucesso!');
@@ -37,7 +37,7 @@ export default function Category() {
                 setError('Erro ao cadastrar a categoria.');
             }
         } finally {
-            setLoading(false); // Finalizar o carregamento
+            setLoading(false);
         }
     }
 
@@ -62,16 +62,16 @@ export default function Category() {
                             value={name}
                             onChange={(e) => {
                                 setName(e.target.value);
-                                setError(null); // Limpar o erro quando o usuário começa a digitar
+                                setError(null);
                             }}
-                            required // Adicionar a validação HTML5 para campo obrigatório
+                            required 
                         />
 
                         <button 
                             className={styles.buttonAdd} 
                             type="submit" 
                             data-testid="cadastrar-button"
-                            disabled={loading} // Desabilitar o botão durante o carregamento
+                            disabled={loading}
                         >
                             {loading ? 'Cadastrando...' : 'Cadastrar'}
                         </button>

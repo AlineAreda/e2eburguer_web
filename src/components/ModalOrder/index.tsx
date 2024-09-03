@@ -3,7 +3,7 @@ import styles from './styles.module.scss';
 
 import { FiX } from 'react-icons/fi';
 
-import { OrderItemProps } from '../../pages/dashboard/dashboard';
+import { OrderItemProps } from '../../pages/dashboard';
 
 interface ModalOrderProps {
     isOpen: boolean;

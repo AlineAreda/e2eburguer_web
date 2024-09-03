@@ -29,13 +29,13 @@ export default function Home() {
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
 
-    // Resetando mensagens de erro
+
     setEmailError("");
     setPasswordError("");
 
     let hasError = false;
 
-    // Validação de e-mail
+
     if (email === "") {
       setEmailError("O campo de e-mail é obrigatório.");
       hasError = true;
@@ -44,13 +44,13 @@ export default function Home() {
       hasError = true;
     }
 
-    // Validação de senha
+
     if (password === "") {
       setPasswordError("O campo de senha é obrigatório.");
       hasError = true;
     }
 
-    // Se houver erro, exibe um único toast e para a execução
+
     if (hasError) {
       toast.warning("Preencha os campos corretamente!");
       return;
@@ -68,7 +68,8 @@ export default function Home() {
       if (response.ok) {
         toast.success("Login realizado com sucesso!");
       } else {
-        let errorMessage = "Erro ao acessar, verifique suas credenciais de acesso!";
+        let errorMessage =
+          "Erro ao acessar, verifique suas credenciais de acesso!";
 
         if (response.status === 401) {
           errorMessage = response.error || "Usuário e/ou Senha incorretos.";
@@ -81,7 +82,7 @@ export default function Home() {
         toast.error(errorMessage);
       }
     } catch (error) {
-   //   toast.error("Ocorreu um erro. Tente novamente.");
+      //   toast.error("Ocorreu um erro. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -129,7 +130,7 @@ export default function Home() {
           </form>
           <Link href="/signup">
             <span className={styles.text}>
-              Não possui uma conta? Cadastre-se
+              Já possui uma conta? Faça seu login
             </span>
           </Link>
         </div>
