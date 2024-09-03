@@ -178,8 +178,8 @@ export default function Product({ categoryList }: CategoryProps) {
   )
 }
 
-export const getServerSideProps = canSSRAuth(async (ctx) => {
-  const apiClient = setupAPIClient(ctx)
+export const getServerSideProps = canSSRAuth(async () => {
+  const apiClient = setupAPIClient(undefined)
 
   const response = await apiClient.get('/category/list');
 
