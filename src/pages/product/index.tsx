@@ -55,8 +55,9 @@ export default function Product({ categoryList }: CategoryProps) {
   async function handleRegister(event: FormEvent) {
     event.preventDefault();
 
-    if (name === '' || price === '' || description === '' || imageAvatar === null) {
-      toast.error("Preencha todos os campos!");
+    
+    if (name === '' || price === '' || description === '') {
+      toast.error("Preencha todos os campos obrigatórios!");
       return;
     }
 
@@ -67,14 +68,18 @@ export default function Product({ categoryList }: CategoryProps) {
       data.append('price', price);
       data.append('description', description);
       data.append('category_id', categories[categorySelected].id);
-      data.append('file', imageAvatar);
+
+      // Só adicione a imagem se ela estiver presente
+      if (imageAvatar) {
+        data.append('banner', imageAvatar); 
+      }
 
       const apiClient = setupAPIClient();
-
       await apiClient.post('/product', data);
 
       toast.success('Produto cadastrado com sucesso!');
 
+      // Limpar os campos após o cadastro
       setName('');
       setPrice('');
       setDescription('');
