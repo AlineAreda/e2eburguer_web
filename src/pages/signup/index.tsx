@@ -38,7 +38,6 @@ export default function SignUp() {
           hasSpecialChar;
   }
 
-  // Função para transformar o e-mail em caixa baixa e atualizar o estado
   function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
     const emailInput = e.target.value.toLowerCase();
     setEmail(emailInput);
@@ -100,11 +99,8 @@ export default function SignUp() {
     setLoading(true);
 
     try {
-      const response = (await signUp({ name, email, password })) as unknown as {
-        ok: boolean;
-        status?: number;
-        error?: string;
-      };
+      // Inclui confirmPassword no objeto enviado para signUp
+      const response = await signUp({ name, email, password, confirmPassword });
 
       if (response.ok) {
         toast.success("Cadastro realizado com sucesso! Realize seu login.");
@@ -122,7 +118,8 @@ export default function SignUp() {
         toast.error(errorMessage);
       }
     } catch (error) {
-      // toast.error("Ocorreu um erro. Tente novamente.");
+      console.error("Erro ao realizar cadastro:", error);
+      toast.error("Ocorreu um erro. Tente novamente.");
     } finally {
       setLoading(false);
     }
