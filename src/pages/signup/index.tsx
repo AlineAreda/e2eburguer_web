@@ -15,10 +15,12 @@ export default function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
   const [loading, setLoading] = useState(false);
 
@@ -30,10 +32,16 @@ export default function SignUp() {
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     return password.length >= minLength &&
-           password.length <= maxLength &&
-           hasUpperCase &&
-           hasNumber &&
-           hasSpecialChar;
+          password.length <= maxLength &&
+          hasUpperCase &&
+          hasNumber &&
+          hasSpecialChar;
+  }
+
+  // Função para transformar o e-mail em caixa baixa e atualizar o estado
+  function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const emailInput = e.target.value.toLowerCase();
+    setEmail(emailInput);
   }
 
   async function handleSignUp(event: FormEvent) {
@@ -43,6 +51,7 @@ export default function SignUp() {
     setNameError('');
     setEmailError('');
     setPasswordError('');
+    setConfirmPasswordError(''); 
 
     let hasError = false;
 
@@ -59,7 +68,7 @@ export default function SignUp() {
     if (email === '') {
       setEmailError("O campo de e-mail é obrigatório.");
       hasError = true;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+    } else if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) {
       setEmailError("Por favor, insira um e-mail válido.");
       hasError = true;
     }
@@ -69,7 +78,16 @@ export default function SignUp() {
       setPasswordError("O campo de senha é obrigatório.");
       hasError = true;
     } else if (!validatePassword(password)) {
-      setPasswordError("A senha deve conter entre 8 e 12 caracteres, incluindo ao menos uma letra maiúscula, um número e um carácter especial.");
+      setPasswordError("A senha deve conter entre 8 e 12 caracteres, incluindo ao menos uma letra maiúscula, um número e um caráter especial.");
+      hasError = true;
+    }
+
+    // Validação de confirmação de senha
+    if (confirmPassword === '') {
+      setConfirmPasswordError("Confirme sua senha.");
+      hasError = true;
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError("As senhas não coincidem.");
       hasError = true;
     }
 
@@ -91,20 +109,20 @@ export default function SignUp() {
       if (response.ok) {
         toast.success("Cadastro realizado com sucesso! Realize seu login.");
       } else {
-        let errorMessage = "Erro ao realizar cadastro.Tente novamente ou verifique um outro e-mail.";
+        let errorMessage = "Erro ao realizar cadastro. Tente novamente ou verifique um outro e-mail.";
 
         if (response.status === 409) {
           errorMessage = response.error || "E-mail já cadastrado. Verifique um outro e-mail ou faça login.";
         } else if (response.status === 400) {
           errorMessage = response.error || "Preencha os campos corretamente.";
         } else if (response.status === 500) {
-          errorMessage = response.error || "Erro interno no servidor.";
+          errorMessage = response.error || "Ocorreu um erro interno. Tente novamente.";
         }
 
         toast.error(errorMessage);
       }
     } catch (error) {
- //     toast.error("Ocorreu um erro. Tente novamente.");
+      // toast.error("Ocorreu um erro. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -136,7 +154,7 @@ export default function SignUp() {
               placeholder="Digite seu e-mail"
               type="text"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
             />
             {emailError && <p className={styles.errorText}>{emailError}</p>}
 
@@ -149,6 +167,16 @@ export default function SignUp() {
               onChange={(e) => setPassword(e.target.value)}
             />
             {passwordError && <p className={styles.errorText}>{passwordError}</p>}
+
+            <Input
+              id="confirmar-senha"
+              data-testid="input-confirm-senha"
+              placeholder="Confirme sua senha"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            {confirmPasswordError && <p className={styles.errorText}>{confirmPasswordError}</p>}
 
             <Button
               id="btn-cadastrar"
