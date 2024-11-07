@@ -56,7 +56,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (token) {
       api
-        .get("/me")
+        .get("/user/detail")
         .then((response) => {
           const { id, name, email } = response.data;
 
@@ -104,7 +104,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   async function signUp({ name, email, password }: SignUpProps) {
     try {
-      const response = await api.post("/users", {
+      const response = await api.post("/user", {
         name,
         email,
         password,
