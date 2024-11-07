@@ -84,27 +84,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function signUp({ name, email, password, confirmPassword }: SignUpProps) {
+  async function signUp({
+    name,
+    email,
+    password,
+    confirmPassword,
+  }: SignUpProps) {
     try {
       const response = await api.post("/user", {
         name,
         email,
         password,
-        confirmPassword, 
+        confirmPassword,
       });
 
       toast.success("Cadastro realizado com sucesso!");
       Router.push("/");
     } catch (err: any) {
-      toast.error("Erro ao realizar cadastro. Tente novamente ou verifique um outro e-mail.");
-      console.error("Erro ao realizar cadastro: ", err.response?.data || err.message);
+      toast.error(
+        "Erro ao realizar cadastro. Tente novamente ou verifique um outro e-mail."
+      );
+      console.error(
+        "Erro ao realizar cadastro: ",
+        err.response?.data || err.message
+      );
     }
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut, signUp }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, signIn, signOut, signUp }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
-

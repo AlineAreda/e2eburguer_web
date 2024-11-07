@@ -29,12 +29,10 @@ export default function Home() {
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
 
-
     setEmailError("");
     setPasswordError("");
 
     let hasError = false;
-
 
     if (email === "") {
       setEmailError("O campo de e-mail é obrigatório.");
@@ -44,12 +42,10 @@ export default function Home() {
       hasError = true;
     }
 
-
     if (password === "") {
       setPasswordError("O campo de senha é obrigatório.");
       hasError = true;
     }
-
 
     if (hasError) {
       toast.warning("Preencha os campos corretamente!");

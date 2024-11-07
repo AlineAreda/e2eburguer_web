@@ -8,9 +8,11 @@ import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { AuthContext } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 export default function SignUp() {
   const { signUp } = useContext(AuthContext);
+  const router = useRouter();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -100,26 +102,14 @@ export default function SignUp() {
 
     try {
       // Inclui confirmPassword no objeto enviado para signUp
-      const response = await signUp({ name, email, password, confirmPassword });
+      await signUp({ name, email, password, confirmPassword });
+      router.push("/");
+    
 
-      if (response.ok) {
-        toast.success("Cadastro realizado com sucesso! Realize seu login.");
-      } else {
-        let errorMessage = "Erro ao realizar cadastro. Tente novamente ou verifique um outro e-mail.";
-
-        if (response.status === 409) {
-          errorMessage = response.error || "E-mail já cadastrado. Verifique um outro e-mail ou faça login.";
-        } else if (response.status === 400) {
-          errorMessage = response.error || "Preencha os campos corretamente.";
-        } else if (response.status === 500) {
-          errorMessage = response.error || "Ocorreu um erro interno. Tente novamente.";
-        }
-
-        toast.error(errorMessage);
-      }
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || "Erro ao realizar cadastro. Tente novamente ou verifique um outro e-mail.";
+      toast.error(errorMessage);
       console.error("Erro ao realizar cadastro:", error);
-      toast.error("Ocorreu um erro. Tente novamente.");
     } finally {
       setLoading(false);
     }
