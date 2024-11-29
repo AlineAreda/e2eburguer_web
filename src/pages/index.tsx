@@ -1,31 +1,19 @@
-import { useContext, FormEvent, useState } from "react";
-import Head from "next/head";
-import Image from "next/image";
+import { useContext, useState, FormEvent } from "react";
 import Link from "next/link";
-import logoImg from "../../public/logo.svg";
-
-import styles from "../../styles/home.module.scss";
-
 import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
-
-import { toast } from "react-toastify";
-
 import { AuthContext } from "../contexts/AuthContext";
-
-import { canSSRGuest } from "../utils/canSSRGuest";
+import { toast } from "react-toastify";
+import styles from "../../styles/home.module.scss";
 
 export default function Home() {
   const { signIn } = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
   const [loading, setLoading] = useState(false);
-
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
 
@@ -85,58 +73,53 @@ export default function Home() {
   }
 
   return (
-    <>
-      <Head>
-        <title>E2E Burguer - Faça seu login</title>
-      </Head>
-      <div className={styles.containerCenter}>
-        <Image src={logoImg} alt="Logo E2E Burguer" />
-        <div className={styles.login}>
-          <form onSubmit={handleLogin} noValidate>
-            <Input
-              id="email"
-              data-testid="email-input"
-              placeholder="Digite seu e-mail"
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            {emailError && <p className={styles.errorText}>{emailError}</p>}
-
-            <Input
-              id="senha"
-              data-testid="senha-input"
-              placeholder="Sua senha"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            {passwordError && (
-              <p className={styles.errorText}>{passwordError}</p>
-            )}
-
-            <Button
-              id="btn-acessar"
-              data-testid="botton-submit"
-              type="submit"
-              loading={loading}
-            >
-              Acessar
-            </Button>
-          </form>
-          <Link href="/signup">
-            <span className={styles.text}>
-              Já possui uma conta? Faça seu login
-            </span>
-          </Link>
-        </div>
+    <div className={styles.containerCenter}>
+      {/* Seção do Banner */}
+      <div className={styles.banner}>
+        <img
+          src="/banner-e2eburguer.png"
+          alt="Banner Hambúrguer"
+          className={styles.bannerImage}
+        />
       </div>
-    </>
+
+      {/* Seção do Formulário */}
+      <div className={styles.login}>
+        <img
+          src="/logo.svg"
+          alt="Logo E2E Burguer"
+          className={styles.logo}
+        />
+        <form className={styles.loginForm} onSubmit={handleLogin}>
+          <Input
+            id="email"
+            placeholder="Digite seu e-mail"
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          {emailError && <p className={styles.errorText}>{emailError}</p>}
+
+          <Input
+            id="password"
+            placeholder="Sua senha"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {passwordError && (
+            <p className={styles.errorText}>{passwordError}</p>
+          )}
+
+          <Button type="submit" loading={loading}>
+            Acessar
+          </Button>
+        </form>
+        {/* Link atualizado para corrigir o erro */}
+        <Link href="/signup" className={styles.text}>
+          Já possui uma conta? Faça seu login
+        </Link>
+      </div>
+    </div>
   );
 }
-
-export const getServerSideProps = canSSRGuest(async (ctx) => {
-  return {
-    props: {},
-  };
-});
