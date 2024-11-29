@@ -14,7 +14,6 @@ export default function Home() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
-
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
 
@@ -23,7 +22,7 @@ export default function Home() {
 
     let hasError = false;
 
-    if (!email) {
+    if (email === "") {
       setEmailError("O campo de e-mail é obrigatório.");
       hasError = true;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -31,7 +30,7 @@ export default function Home() {
       hasError = true;
     }
 
-    if (!password) {
+    if (password === "") {
       setPasswordError("O campo de senha é obrigatório.");
       hasError = true;
     }
@@ -44,10 +43,30 @@ export default function Home() {
     setLoading(true);
 
     try {
-      await signIn({ email, password });
-      toast.success("Login realizado com sucesso!");
-    } catch {
-      toast.error("Erro ao acessar. Verifique suas credenciais.");
+      const response = (await signIn({ email, password })) as unknown as {
+        ok: boolean;
+        status?: number;
+        error?: string;
+      };
+
+      if (response.ok) {
+        toast.success("Login realizado com sucesso!");
+      } else {
+        let errorMessage =
+          "Erro ao acessar, verifique suas credenciais de acesso!";
+
+        if (response.status === 401) {
+          errorMessage = response.error || "Usuário e/ou Senha incorretos.";
+        } else if (response.status === 400) {
+          errorMessage = response.error || "E-mail e senha são obrigatórios.";
+        } else if (response.status === 500) {
+          errorMessage = response.error || "Erro interno no servidor.";
+        }
+
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      //   toast.error("Ocorreu um erro. Tente novamente.");
     } finally {
       setLoading(false);
     }
