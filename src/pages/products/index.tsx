@@ -1,12 +1,12 @@
-import { useState, useEffect, ChangeEvent } from 'react';
-import Head from 'next/head';
-import styles from './styles.module.scss';
-import { Header } from '../../components/Header';
-import Footer from '../../components/Footer';
+import { useState, useEffect } from "react";
+import Head from "next/head";
+import styles from "./styles.module.scss";
+import { Header } from "../../components/Header";
+import Footer from "../../components/Footer";
 
-import { setupAPIClient } from '../../services/api';
-import { toast } from 'react-toastify';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { setupAPIClient } from "../../services/api";
+import { toast } from "react-toastify";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 type ProductProps = {
   id: string;
@@ -25,24 +25,24 @@ type CategoryProps = {
 export default function Products() {
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [categories, setCategories] = useState<CategoryProps[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editProduct, setEditProduct] = useState<ProductProps | null>(null);
 
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     async function loadCategories() {
       const apiClient = setupAPIClient();
-      const response = await apiClient.get('/category/list');
+      const response = await apiClient.get("/category/list");
       setCategories(response.data);
     }
 
     async function loadProducts() {
       const apiClient = setupAPIClient();
-      const response = await apiClient.get('/category/product/all');
+      const response = await apiClient.get("/category/product/all");
       setProducts(response.data);
     }
 
@@ -60,10 +60,10 @@ export default function Products() {
     const apiClient = setupAPIClient();
     try {
       await apiClient.delete(`/product/remove/${productId}`);
-      toast.success('Produto excluído com sucesso!');
+      toast.success("Produto excluído com sucesso!");
       setProducts(products.filter((product) => product.id !== productId));
     } catch (error) {
-      toast.error('Erro ao excluir o produto.');
+      toast.error("Erro ao excluir o produto.");
     }
   }
 
@@ -82,7 +82,7 @@ export default function Products() {
       };
 
       await apiClient.patch(`/product/${editProduct.id}`, data);
-      toast.success('Produto atualizado com sucesso!');
+      toast.success("Produto atualizado com sucesso!");
 
       setProducts(
         products.map((product) =>
@@ -92,11 +92,11 @@ export default function Products() {
 
       setIsEditing(false);
       setEditProduct(null);
-      setName('');
-      setPrice('');
-      setDescription('');
+      setName("");
+      setPrice("");
+      setDescription("");
     } catch (error) {
-      toast.error('Erro ao atualizar o produto.');
+      toast.error("Erro ao atualizar o produto.");
     }
   }
 
@@ -108,7 +108,7 @@ export default function Products() {
       <div>
         <Header />
         <main className={styles.container}>
-          <h1>Produtos</h1>
+          <h1 className={styles.title}>Produtos</h1>
 
           {/* Filtro por Categoria */}
           <select
@@ -161,11 +161,8 @@ export default function Products() {
 
           {/* Formulário de Edição */}
           {isEditing && editProduct && (
-            <form
-              onSubmit={handleUpdateProduct}
-              className={styles.editForm}
-            >
-              <h2>Editando Produto</h2>
+            <form onSubmit={handleUpdateProduct} className={styles.editForm}>
+              <h2 className={styles.editTitle}>Editando Produto</h2>
               <input
                 type="text"
                 placeholder="Nome do produto"
@@ -190,9 +187,9 @@ export default function Products() {
                   onClick={() => {
                     setIsEditing(false);
                     setEditProduct(null);
-                    setName('');
-                    setPrice('');
-                    setDescription('');
+                    setName("");
+                    setPrice("");
+                    setDescription("");
                   }}
                 >
                   Cancelar
