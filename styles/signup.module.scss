@@ -53,20 +53,19 @@
   flex-direction: column;
   align-items: flex-start;
   margin-top: 1.5rem;
-  gap: 1.5rem; /* Espaçamento maior entre o radio e o botão */
+  gap: 0.5rem; /* Espaço entre os elementos */
 }
 
 .radioContainer label {
-  font-size: 0.9rem; /* Letra menor */
+  font-size: 0.9rem;
   margin-bottom: 0.3rem;
   color: var(--white);
-  font-weight: 400; /* Removido o negrito */
 }
 
 .radioContainer div {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem; /* Espaço horizontal entre os botões */
 }
 
 .radioContainer input[type="radio"] {
@@ -74,18 +73,36 @@
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: var(--yellon-900); /* Cor personalizada */
+  accent-color: var(--yellon-900);
 }
 
 .radioContainer span {
-  color: var(--white);
-  font-size: 0.9rem; /* Letra menor */
+  color: var(--white); 
+  font-size: 0.9rem; 
+  font-weight: normal; 
   cursor: pointer;
 }
 
 .radioContainer input[type="radio"]:focus {
   outline: 2px solid var(--yellon-900);
   outline-offset: 2px;
+}
+
+.radioContainer + button {
+  margin-top: 1.5rem; 
+}
+
+.text {
+  margin-top: 1rem;
+  color: var(--white);
+  text-align: center;
+  cursor: pointer;
+}
+
+@media (max-width: 620px) {
+  .login {
+    width: 90%;
+  }
 }
 
 .text {
