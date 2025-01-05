@@ -18,7 +18,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isGestao, setIsGestao] = useState<boolean | null>(null); // Valor do perfil (booleano)
+  const [isGestao, setIsGestao] = useState<boolean | null>(null); // Valor do perfil
 
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -44,15 +44,9 @@ export default function SignUp() {
     );
   }
 
-  function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const emailInput = e.target.value.toLowerCase();
-    setEmail(emailInput);
-  }
-
   async function handleSignUp(event: FormEvent) {
     event.preventDefault();
 
-    // Resetando mensagens de erro
     setNameError("");
     setEmailError("");
     setPasswordError("");
@@ -61,8 +55,8 @@ export default function SignUp() {
 
     let hasError = false;
 
-    // Validação de nome
-    if (name === "") {
+    // Validações de formulário
+    if (!name) {
       setNameError("O campo de nome é obrigatório.");
       hasError = true;
     } else if (name.trim().split(" ").length < 2) {
@@ -70,8 +64,7 @@ export default function SignUp() {
       hasError = true;
     }
 
-    // Validação de e-mail
-    if (email === "") {
+    if (!email) {
       setEmailError("O campo de e-mail é obrigatório.");
       hasError = true;
     } else if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) {
@@ -79,19 +72,17 @@ export default function SignUp() {
       hasError = true;
     }
 
-    // Validação de senha
-    if (password === "") {
+    if (!password) {
       setPasswordError("O campo de senha é obrigatório.");
       hasError = true;
     } else if (!validatePassword(password)) {
       setPasswordError(
-        "A senha deve conter entre 8 e 12 caracteres, incluindo ao menos uma letra maiúscula, um número e um caráter especial."
+        "A senha deve conter entre 8 e 12 caracteres, incluindo ao menos uma letra maiúscula, um número e um caractere especial."
       );
       hasError = true;
     }
 
-    // Validação de confirmação de senha
-    if (confirmPassword === "") {
+    if (!confirmPassword) {
       setConfirmPasswordError("Confirme sua senha.");
       hasError = true;
     } else if (password !== confirmPassword) {
@@ -99,13 +90,11 @@ export default function SignUp() {
       hasError = true;
     }
 
-    // Validação de perfil
     if (isGestao === null) {
       setProfileError("Por favor, selecione o perfil.");
       hasError = true;
     }
 
-    // Se houver erro, exibe um único toast e para a execução
     if (hasError) {
       toast.warning("Preencha os campos corretamente!", {
         toastId: "warning-toast",
@@ -116,7 +105,6 @@ export default function SignUp() {
     setLoading(true);
 
     try {
-      // Inclui o perfil no objeto enviado para signUp
       await signUp({ name, email, password, confirmPassword, isGestao });
       toast.success("Cadastro realizado com sucesso!", {
         toastId: "success-toast",
@@ -125,9 +113,8 @@ export default function SignUp() {
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error ||
-        "Erro ao realizar cadastro. Tente novamente ou verifique um outro e-mail.";
+        "Erro ao realizar cadastro. Tente novamente.";
       toast.error(errorMessage, { toastId: "error-toast" });
-      console.error("Erro ao realizar cadastro:", error);
     } finally {
       setLoading(false);
     }
@@ -142,30 +129,22 @@ export default function SignUp() {
         <Image src={logoImg} alt="Logo E2E Burguer" />
         <div className={styles.login}>
           <h1>Crie sua conta</h1>
-          <form onSubmit={handleSignUp} noValidate>
+          <form onSubmit={handleSignUp}>
             <Input
-              data-testid="input-name"
-              id="seu-nome"
               placeholder="Digite seu nome"
-              type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
             {nameError && <p className={styles.errorText}>{nameError}</p>}
 
             <Input
-              id="seu-email"
-              data-testid="input-email"
               placeholder="Digite seu e-mail"
-              type="text"
               value={email}
-              onChange={handleEmailChange}
+              onChange={(e) => setEmail(e.target.value)}
             />
             {emailError && <p className={styles.errorText}>{emailError}</p>}
 
             <Input
-              id="sua-senha"
-              data-testid="input-senha"
               placeholder="Sua senha"
               type="password"
               value={password}
@@ -176,8 +155,6 @@ export default function SignUp() {
             )}
 
             <Input
-              id="confirmar-senha"
-              data-testid="input-confirm-senha"
               placeholder="Confirme sua senha"
               type="password"
               value={confirmPassword}
@@ -187,14 +164,14 @@ export default function SignUp() {
               <p className={styles.errorText}>{confirmPasswordError}</p>
             )}
 
-            {/* Radios para seleção de perfil */}
             <div className={styles.profileSelection}>
               <label>
                 <input
                   type="radio"
                   name="profile"
                   value="gestao"
-                  onChange={() => setIsGestao(true)} // Define true para gestão
+                  checked={isGestao === true}
+                  onChange={() => setIsGestao(true)}
                 />
                 Usuário Gestão
               </label>
@@ -203,7 +180,8 @@ export default function SignUp() {
                   type="radio"
                   name="profile"
                   value="salao"
-                  onChange={() => setIsGestao(false)} // Define false para salão
+                  checked={isGestao === false}
+                  onChange={() => setIsGestao(false)}
                 />
                 Usuário Salão
               </label>
@@ -212,20 +190,9 @@ export default function SignUp() {
               )}
             </div>
 
-            <Button
-              id="btn-cadastrar"
-              data-testid="botton-cadastrar"
-              type="submit"
-              loading={loading}
-            >
-              Cadastrar
-            </Button>
+            <Button loading={loading}>Cadastrar</Button>
           </form>
-          <Link href="/">
-            <span className={styles.text}>
-              Já possui uma conta? Faça seu login!
-            </span>
-          </Link>
+          <Link href="/">Já possui uma conta? Faça seu login!</Link>
         </div>
       </div>
     </>
