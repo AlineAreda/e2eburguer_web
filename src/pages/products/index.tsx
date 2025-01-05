@@ -16,7 +16,8 @@ type ProductProps = {
 
 export default function Products() {
   const [products, setProducts] = useState<ProductProps[]>([]);
-  const [loading, setLoading] = useState(true); // Adicionado para exibir estado de carregamento
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false); // Estado de erro separado
 
   useEffect(() => {
     async function loadProducts() {
@@ -24,18 +25,19 @@ export default function Products() {
       try {
         const response = await apiClient.get("/products");
 
-        // Verificação se os dados estão no formato esperado
         if (Array.isArray(response.data)) {
           setProducts(response.data);
+          setError(false); // Sem erro
         } else {
           throw new Error("Formato inesperado dos dados.");
         }
       } catch (error) {
+        setError(true); // Marca que houve erro
         toast.error(
           "Erro ao carregar produtos. Verifique sua conexão ou tente novamente mais tarde."
         );
       } finally {
-        setLoading(false); // Garantir que o estado de carregamento seja atualizado
+        setLoading(false);
       }
     }
 
@@ -69,6 +71,14 @@ export default function Products() {
               data-testid="loading-message"
             >
               Carregando produtos...
+            </p>
+          ) : error ? (
+            <p
+              className={styles.error}
+              id="error-message"
+              data-testid="error-message"
+            >
+              Não foi possível carregar os produtos. Tente novamente mais tarde.
             </p>
           ) : products.length === 0 ? (
             <p
