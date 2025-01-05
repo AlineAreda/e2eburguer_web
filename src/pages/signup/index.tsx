@@ -18,11 +18,13 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isGestao, setIsGestao] = useState<boolean | null>(null); // Valor do perfil (booleano)
 
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [profileError, setProfileError] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -55,6 +57,7 @@ export default function SignUp() {
     setEmailError("");
     setPasswordError("");
     setConfirmPasswordError("");
+    setProfileError("");
 
     let hasError = false;
 
@@ -96,6 +99,12 @@ export default function SignUp() {
       hasError = true;
     }
 
+    // Validação de perfil
+    if (isGestao === null) {
+      setProfileError("Por favor, selecione o perfil.");
+      hasError = true;
+    }
+
     // Se houver erro, exibe um único toast e para a execução
     if (hasError) {
       toast.warning("Preencha os campos corretamente!", {
@@ -107,8 +116,8 @@ export default function SignUp() {
     setLoading(true);
 
     try {
-      // Inclui confirmPassword no objeto enviado para signUp
-      await signUp({ name, email, password, confirmPassword });
+      // Inclui o perfil no objeto enviado para signUp
+      await signUp({ name, email, password, confirmPassword, isGestao });
       toast.success("Cadastro realizado com sucesso!", {
         toastId: "success-toast",
       });
@@ -177,6 +186,31 @@ export default function SignUp() {
             {confirmPasswordError && (
               <p className={styles.errorText}>{confirmPasswordError}</p>
             )}
+
+            {/* Radios para seleção de perfil */}
+            <div className={styles.profileSelection}>
+              <label>
+                <input
+                  type="radio"
+                  name="profile"
+                  value="gestao"
+                  onChange={() => setIsGestao(true)} // Define true para gestão
+                />
+                Usuário Gestão
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="profile"
+                  value="salao"
+                  onChange={() => setIsGestao(false)} // Define false para salão
+                />
+                Usuário Salão
+              </label>
+              {profileError && (
+                <p className={styles.errorText}>{profileError}</p>
+              )}
+            </div>
 
             <Button
               id="btn-cadastrar"
