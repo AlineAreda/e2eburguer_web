@@ -2,7 +2,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Head from "next/head";
 import styles from "./styles.module.scss";
 import { Header } from "../../components/Header";
-import Footer from "../../components/Footer";
+
 
 import { canSSRAuth } from "../../utils/canSSRAuth";
 
@@ -135,14 +135,22 @@ export default function Product({ categoryList }: CategoryProps) {
               )}
             </label>
 
-            <select value={categorySelected} onChange={handleChangeCategory}
-            data-testid="category-select"
-            name="category"
-            required
+            <select
+              value={categorySelected}
+              onChange={handleChangeCategory}
+              data-testid="category-select"
+              name="category"
+              required
             >
-              <option value="" disabled>Selecione uma categoria</option>
+              <option value="" disabled>
+                Selecione uma categoria
+              </option>
               {categories.map((item) => (
-                <option key={item.id} value={item.id} data-testid={`category-option-${item.id}`}>
+                <option
+                  key={item.id}
+                  value={item.id}
+                  data-testid={`category-option-${item.id}`}
+                >
                   {item.name}
                 </option>
               ))}
@@ -183,9 +191,6 @@ export default function Product({ categoryList }: CategoryProps) {
             </button>
           </form>
         </main>
-
-        {/* Adicionando o Footer */}
-        <Footer />
       </div>
     </>
   );
