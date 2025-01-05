@@ -152,38 +152,55 @@ export default function SignUp() {
       </Head>
       <div className={styles.containerCenter}>
         <div className={styles.signup}>
-          <Image src={logoImg} alt="Logo E2E Burguer" className={styles.logo} />
+          <Image
+            src={logoImg}
+            alt="Logo E2E Burguer"
+            className={styles.logo}
+            data-testid="signup-logo"
+          />
           <h1>Crie sua conta</h1>
-          <form onSubmit={handleSignUp} className={styles.signupForm}>
+          <form
+            onSubmit={handleSignUp}
+            className={styles.signupForm}
+            data-testid="signup-form"
+          >
             <Input
+              id="signup-name"
               placeholder="Digite seu nome"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              data-testid="input-name"
             />
             {errors.name && <p className={styles.errorText}>{errors.name}</p>}
 
             <Input
+              id="signup-email"
               placeholder="Digite seu e-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              data-testid="input-email"
             />
             {errors.email && <p className={styles.errorText}>{errors.email}</p>}
 
             <Input
+              id="signup-password"
               placeholder="Sua senha"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              data-testid="input-password"
             />
             {errors.password && (
               <p className={styles.errorText}>{errors.password}</p>
             )}
 
             <Input
+              id="signup-confirm-password"
               placeholder="Confirme sua senha"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              data-testid="input-confirm-password"
             />
             {errors.confirmPassword && (
               <p className={styles.errorText}>{errors.confirmPassword}</p>
@@ -199,8 +216,9 @@ export default function SignUp() {
                   value="gestao"
                   checked={isGestao === true}
                   onChange={() => setIsGestao(true)}
+                  data-testid="radio-gestao"
                 />
-                <label htmlFor="yes">Gestão</label>
+                <label htmlFor="profile-gestao">Gestão</label>
                 <input
                   type="radio"
                   id="profile-salao"
@@ -208,17 +226,20 @@ export default function SignUp() {
                   value="salao"
                   checked={isGestao === false}
                   onChange={() => setIsGestao(false)}
+                  data-testid="radio-salao"
                 />
-                <label htmlFor="no">Salão</label>
+                <label htmlFor="profile-salao">Salão</label>
               </div>
               {errors.profile && (
                 <p className={styles.errorText}>{errors.profile}</p>
               )}
             </div>
 
-            <Button loading={loading}>Cadastrar</Button>
+            <Button loading={loading} data-testid="signup-button">
+              Cadastrar
+            </Button>
           </form>
-          <Link href="/" className={styles.text}>
+          <Link href="/" className={styles.text} data-testid="login-link">
             Já possui uma conta? Faça seu login!
           </Link>
         </div>

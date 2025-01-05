@@ -28,9 +28,41 @@
   flex-direction: column;
 }
 
+.signupForm input {
+  height: 40px;
+  border: 1px solid var(--gray-100);
+  background-color: var(--dark-fileds);
+  color: var(--white);
+  border-radius: 5px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.signupForm input::placeholder {
+  color: var(--gray-300);
+}
+
+.signupForm button {
+  height: 40px;
+  font-size: 1.2rem;
+  background-color: var(--yellow-btn);
+  color: var(--dark-bg);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.signupForm button:hover {
+  background-color: var(--yellow-hover);
+}
+
 .profileSelection {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
 }
 
@@ -50,12 +82,42 @@
   color: var(--white);
   cursor: pointer;
   text-align: center;
+  font-size: 0.9rem;
+}
+
+.text:hover {
+  text-decoration: underline;
 }
 
 .errorText {
-  color: var(--red);
+  color: var(--white); /* Ajustado para branco */
   font-size: 0.9rem;
   margin-top: -0.5rem;
   margin-bottom: 1rem;
   text-align: left;
+}
+
+@media (max-width: 768px) {
+  .signup {
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .logo {
+    width: 150px;
+    margin-bottom: 1.5rem;
+  }
+
+  .signupForm button {
+    font-size: 1rem;
+  }
+
+  .profileSelection {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profileSelection label {
+    margin-bottom: 0.5rem;
+  }
 }
