@@ -48,7 +48,9 @@ export default function Home() {
     }
 
     if (hasError) {
-      toast.warning("Preencha os campos corretamente!");
+      toast.warning("Preencha os campos corretamente!", {
+        toastId: "warning-toast",
+      });
       return;
     }
 
@@ -62,7 +64,9 @@ export default function Home() {
       };
 
       if (response.ok) {
-        toast.success("Login realizado com sucesso!");
+        toast.success("Login realizado com sucesso!", {
+          toastId: "success-toast",
+        });
       } else {
         let errorMessage =
           "Erro ao acessar, verifique suas credenciais de acesso!";
@@ -75,7 +79,7 @@ export default function Home() {
           errorMessage = response.error || "Erro interno no servidor.";
         }
 
-        toast.error(errorMessage);
+        toast.error(errorMessage, { toastId: "error-toast" });
       }
     } catch (error) {
       //   toast.error("Ocorreu um erro. Tente novamente.");
@@ -126,7 +130,7 @@ export default function Home() {
           </form>
           <Link href="/signup">
             <span className={styles.text}>
-              Já possui uma conta? Faça seu login
+              Não possui uma conta? Cadastre-se!
             </span>
           </Link>
         </div>

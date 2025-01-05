@@ -6,13 +6,22 @@ import { FiLogOut } from 'react-icons/fi';
 import { AuthContext } from '../../contexts/AuthContext';
 
 export function Header() {
-  const { signOut, isAuthenticated } = useContext(AuthContext);
+  const { signOut, isAuthenticated, user } = useContext(AuthContext); // Obtendo o nome do usuário
   const router = useRouter();
 
   const handleLogoClick = () => {
     const redirectTo = isAuthenticated ? '/dashboard' : '/';
     router.push(redirectTo);
   };
+
+  // Obter iniciais do nome do usuário
+  const userInitials = user?.name
+    ? user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+    : 'U';
 
   return (
     <header className={styles.headerContainer}>
@@ -22,12 +31,39 @@ export function Header() {
         </div>
 
         <nav className={styles.menuNav}>
-          <Link href="/category" data-testid="category-link">
-            Categoria
+          {/* Saudação com o avatar */}
+          <div className={styles.userAvatar}>
+            <span className={styles.avatar}>{userInitials}</span>
+            <span className={styles.greeting}>Olá, {user?.name?.split(' ')[0]}!</span>
+          </div>
+
+          {/* Links com destaque para a página ativa */}
+          <Link href="/category">
+            <a
+              className={router.pathname === '/category' ? styles.activeLink : ''}
+              data-testid="category-link"
+            >
+              Cadastrar Categoria
+            </a>
           </Link>
 
-          <Link href="/product" data-testid="cardapio-link">
-            Cardápio
+          <Link href="/product">
+            <a
+              className={router.pathname === '/product' ? styles.activeLink : ''}
+              data-testid="cardapio-link"
+            >
+              Cadastrar Cardápio
+            </a>
+          </Link>
+
+          {/* Novo link para a página de produtos */}
+          <Link href="/products">
+            <a
+              className={router.pathname === '/products' ? styles.activeLink : ''}
+              data-testid="products-link"
+            >
+              Gerenciar Cardápio
+            </a>
           </Link>
 
           <button onClick={signOut}>

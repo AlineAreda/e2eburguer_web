@@ -4,6 +4,7 @@ import Head from 'next/head';
 import styles from './styles.module.scss';
 
 import { Header } from '../../components/Header';
+import Footer from '../../components/Footer';
 import { FiRefreshCcw } from 'react-icons/fi';
 
 import { setupAPIClient } from '../../services/api';
@@ -152,11 +153,13 @@ export default function Dashboard({ orders }: HomeProps) {
                         handleFinishOrder={handleFinishItem}
                     />
                 )}
+
+                {/* Adicionando o Footer */}
+                <Footer />
             </div>
         </>
     )
 }
-
 
 export const getServerSideProps = canSSRAuth(async (ctx: GetServerSidePropsContext) => {
     const apiClient = setupAPIClient(ctx);
@@ -169,4 +172,3 @@ export const getServerSideProps = canSSRAuth(async (ctx: GetServerSidePropsConte
         }
     }
 });
-

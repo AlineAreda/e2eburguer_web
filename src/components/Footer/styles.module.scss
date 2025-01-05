@@ -1,0 +1,44 @@
+.footer {
+  background-color: #1a1a1a;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .footerContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .logo {
+      margin-bottom: 15px;
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .icon {
+          color: #ffcc00;
+          font-size: 20px;
+        }
+
+        a {
+          color: #fff;
+          text-decoration: none;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

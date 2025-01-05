@@ -1,31 +1,32 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
-import Head from 'next/head';
-import styles from './styles.module.scss';
-import { Header } from '../../components/Header';
+import { useState, ChangeEvent, FormEvent } from "react";
+import Head from "next/head";
+import styles from "./styles.module.scss";
+import { Header } from "../../components/Header";
+import Footer from "../../components/Footer";
 
-import { canSSRAuth } from '../../utils/canSSRAuth';
+import { canSSRAuth } from "../../utils/canSSRAuth";
 
-import { FiUpload } from 'react-icons/fi';
+import { FiUpload } from "react-icons/fi";
 
-import { setupAPIClient } from '../../services/api';
+import { setupAPIClient } from "../../services/api";
 
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 type ItemProps = {
   id: string;
   name: string;
-}
+};
 
 interface CategoryProps {
   categoryList: ItemProps[];
 }
 
 export default function Product({ categoryList }: CategoryProps) {
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
 
-  const [avatarUrl, setAvatarUrl] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [imageAvatar, setImageAvatar] = useState<File | null>(null);
 
   const [categories, setCategories] = useState(categoryList || []);
@@ -42,7 +43,11 @@ export default function Product({ categoryList }: CategoryProps) {
       return;
     }
 
-    if (image.type === 'image/jpeg' || image.type === 'image/png' || image.type === 'image/webp') {
+    if (
+      image.type === "image/jpeg" ||
+      image.type === "image/png" ||
+      image.type === "image/webp"
+    ) {
       setImageAvatar(image);
       setAvatarUrl(URL.createObjectURL(image));
     }
@@ -55,40 +60,44 @@ export default function Product({ categoryList }: CategoryProps) {
   async function handleRegister(event: FormEvent) {
     event.preventDefault();
 
-    
-    if (name === '' || price === '' || description === '') {
-      toast.error("Preencha todos os campos obrigatórios!");
+    if (name === "" || price === "" || description === "") {
+      toast.warning("Preencha todos os campos obrigatórios!", {
+        toastId: "warning-toast",
+      });
       return;
     }
 
     try {
       const data = new FormData();
 
-      data.append('name', name);
-      data.append('price', price);
-      data.append('description', description);
-      data.append('category_id', categories[categorySelected].id);
+      data.append("name", name);
+      data.append("price", price);
+      data.append("description", description);
+      data.append("category_id", categories[categorySelected].id);
 
       // Só adicione a imagem se ela estiver presente
       if (imageAvatar) {
-        data.append('banner', imageAvatar); 
+        data.append("banner", imageAvatar);
       }
 
       const apiClient = setupAPIClient();
-      await apiClient.post('/product', data);
+      await apiClient.post("/product", data);
 
-      toast.success('Produto cadastrado com sucesso!');
+      toast.success("Produto cadastrado com sucesso!", {
+        toastId: "success-toast",
+      });
 
       // Limpar os campos após o cadastro
-      setName('');
-      setPrice('');
-      setDescription('');
+      setName("");
+      setPrice("");
+      setDescription("");
       setImageAvatar(null);
-      setAvatarUrl('');
-
+      setAvatarUrl("");
     } catch (err) {
       console.error(err);
-      toast.error("Ops... Erro ao cadastrar!");
+      toast.error("Ops... Erro ao cadastrar!", {
+        toastId: "error-toast",
+      });
     }
   }
 
@@ -104,13 +113,16 @@ export default function Product({ categoryList }: CategoryProps) {
           <h1>Novo produto</h1>
 
           <form className={styles.form} onSubmit={handleRegister}>
-
             <label className={styles.labelAvatar}>
               <span>
                 <FiUpload size={30} color="#FFF" />
               </span>
 
-              <input type="file" accept="image/png, image/jpeg, image/webp" onChange={handleFile} />
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/webp"
+                onChange={handleFile}
+              />
 
               {avatarUrl && (
                 <img
@@ -150,19 +162,25 @@ export default function Product({ categoryList }: CategoryProps) {
             />
 
             <textarea
-              placeholder="Descreva seu produto..."
+              placeholder="Descreva o produto..."
               data-testid="description-product"
               className={styles.input}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
 
-            <button className={styles.buttonAdd} type="submit" data-testid="btn-cadastrar">
+            <button
+              className={styles.buttonAdd}
+              type="submit"
+              data-testid="btn-cadastrar"
+            >
               Cadastrar
             </button>
-
           </form>
         </main>
+
+        {/* Adicionando o Footer */}
+        <Footer />
       </div>
     </>
   );
@@ -171,7 +189,7 @@ export default function Product({ categoryList }: CategoryProps) {
 export const getServerSideProps = canSSRAuth(async (ctx) => {
   const apiClient = setupAPIClient(ctx);
 
-  const response = await apiClient.get('/category/list');
+  const response = await apiClient.get("/category/list");
 
   return {
     props: {
