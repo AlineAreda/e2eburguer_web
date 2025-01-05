@@ -48,11 +48,11 @@
   }
 
   a {
-    color: var(--white); /* Cor padrão dos links */
+    color: var(--white); /* Cor dos links */
     padding: 0 0.5rem;
     display: inline-block;
     position: relative;
-    transition: color 0.3s ease; /* Transição mais fluida */
+    transition: color 0.3s ease; 
 
     & + a {
       margin-left: 2rem;
