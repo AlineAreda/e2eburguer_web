@@ -28,7 +28,7 @@
 
     .avatar {
       background-color: var(--yellon-900);
-      color: var(--dark-fileds); 
+      color: var(--dark-fileds);
       font-size: 1.2rem;
       font-weight: bold;
       width: 2.5rem;
@@ -48,34 +48,35 @@
   }
 
   a {
-    color: var(--white); 
+    color: var(--white); /* Cor padrão dos links */
     padding: 0 0.5rem;
     display: inline-block;
     position: relative;
-    transition: color 0.7s;
+    transition: color 0.3s ease; /* Transição mais fluida */
 
     & + a {
       margin-left: 2rem;
     }
 
     &:hover {
-      color: var(--yellon-900); 
+      color: var(--yellon-900); /* Cor amarela ao passar o mouse */
     }
   }
 
   .activeLink {
-    color: var(--yellon-900);
+    color: var(--yellon-900); /* Cor amarela para o link ativo */
     font-weight: bold;
+    text-decoration: underline; /* Adiciona destaque ao link ativo */
   }
 
   button {
     margin-left: 2rem;
     background: transparent;
     border: 0;
-    transition: transform 0.8s;
+    transition: transform 0.3s ease;
 
     &:hover {
-      transform: scale(1.2);
+      transform: scale(1.1);
     }
   }
 }

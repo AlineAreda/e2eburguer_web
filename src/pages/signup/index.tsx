@@ -208,7 +208,7 @@ export default function SignUp() {
 
             <div className={styles.radioContainer}>
               <label className={styles.radioTitle}>
-                Qual seu perfil de usuário?
+                Selecione seu perfil de usuário:
               </label>
               <div>
                 <label>
