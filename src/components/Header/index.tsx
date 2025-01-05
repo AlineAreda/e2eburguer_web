@@ -6,7 +6,7 @@ import { FiLogOut } from "react-icons/fi";
 import { AuthContext } from "../../contexts/AuthContext";
 
 export function Header() {
-  const { signOut, isAuthenticated, user } = useContext(AuthContext); // Obtendo o nome do usuário
+  const { signOut, isAuthenticated, user } = useContext(AuthContext);
   const router = useRouter();
 
   const handleLogoClick = () => {
@@ -14,7 +14,6 @@ export function Header() {
     router.push(redirectTo);
   };
 
-  // Obter iniciais do nome do usuário
   const userInitials = user?.name
     ? user.name
         .split(" ")
@@ -36,40 +35,45 @@ export function Header() {
           />
         </div>
 
-        {/* Links com destaque para a página ativa */}
-        <Link href="/category">
-          <a
-            className={router.pathname === "/category" ? styles.activeLink : ""}
-            data-testid="category-link"
-          >
-            Cadastrar Categoria
-          </a>
-        </Link>
-
-        <Link href="/product">
-          <a
-            className={router.pathname === "/product" ? styles.activeLink : ""}
-            data-testid="cardapio-link"
-          >
-            Cadastrar Cardápio
-          </a>
-        </Link>
-
-        {/* Novo link para a página de produtos */}
-        <Link href="/products">
-          <a
-            className={router.pathname === "/products" ? styles.activeLink : ""}
-            data-testid="products-link"
-          >
-            Gerenciar Cardápio
-          </a>
-        </Link>
-
         <nav className={styles.menuNav}>
-          {/* Saudação com o avatar */}
+          <Link href="/category">
+            <a
+              className={
+                router.pathname === "/category" ? styles.activeLink : ""
+              }
+              data-testid="category-link"
+            >
+              Cadastrar Categoria
+            </a>
+          </Link>
+
+          <Link href="/product">
+            <a
+              className={
+                router.pathname === "/product" ? styles.activeLink : ""
+              }
+              data-testid="cardapio-link"
+            >
+              Cadastrar Cardápio
+            </a>
+          </Link>
+
+          <Link href="/products">
+            <a
+              className={
+                router.pathname === "/products" ? styles.activeLink : ""
+              }
+              data-testid="products-link"
+            >
+              Gerenciar Cardápio
+            </a>
+          </Link>
+
           <div className={styles.userAvatar}>
-            <span className={styles.avatar} data-testid="user-name">{userInitials}</span>
-            <span className={styles.greeting} data-testid="greeting">
+            <span className={styles.avatar} data-testid="user-avatar">
+              {userInitials}
+            </span>
+            <span className={styles.greeting} data-testid="user-greeting">
               Olá, {user?.name?.split(" ")[0]}!
             </span>
           </div>
