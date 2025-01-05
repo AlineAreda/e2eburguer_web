@@ -1,20 +1,14 @@
 .container {
-  max-width: 1120px;
-  margin: 0 auto;
+  max-width: 720px;
+  margin: 4rem auto;
   padding: 2rem;
+  color: var(--white);
 }
 
-.title {
+h1 {
   font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.select {
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 2rem;
-  border: 1px solid var(--gray-300);
-  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  color: var(--white);
 }
 
 .productList {
@@ -23,81 +17,22 @@
 }
 
 .productItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background-color: var(--dark-fileds);
+  border: 1px solid var(--gray-100);
+  border-radius: 0.3rem;
   padding: 1rem;
-  border: 1px solid var(--gray-300);
-  border-radius: 4px;
   margin-bottom: 1rem;
 }
 
-.productInfo {
-  flex: 1;
-}
-
-.productInfo strong {
-  display: block;
+.productItem strong {
   font-size: 1.2rem;
-  margin-bottom: 0.5rem;
 }
 
-.productInfo span {
-  display: block;
-  margin-bottom: 0.5rem;
+.productItem p {
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
 }
 
-.productInfo img {
-  max-width: 100px;
-  margin-top: 0.5rem;
-}
-
-.actions button {
-  background: transparent;
-  border: none;
-  margin-left: 0.5rem;
-  cursor: pointer;
-}
-
-.actions button:hover {
-  opacity: 0.8;
-}
-
-.editForm {
-  margin-top: 2rem;
-}
-
-.editTitle {
-  margin-bottom: 1rem;
-}
-
-.editForm input,
-.editForm textarea {
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  border: 1px solid var(--gray-300);
-  border-radius: 4px;
-}
-
-.formActions {
-  display: flex;
-  justify-content: space-between;
-}
-
-.formActions button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.formActions button:first-child {
-  background: var(--green);
-  color: var(--white);
-}
-
-.formActions button:last-child {
-  background: var(--red);
-  color: var(--white);
+.productItem span {
+  font-weight: bold;
 }

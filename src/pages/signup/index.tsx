@@ -3,7 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import logoImg from "../../../public/logo.svg";
-import styles from "../../../styles/home.module.scss";
+import styles from "../../../styles/signup.module.scss";
 import { Input } from "../../components/ui/Input";
 import { Button } from "../../components/ui/Button";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -18,13 +18,15 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isGestao, setIsGestao] = useState<boolean | null>(null); // Valor do perfil
+  const [isGestao, setIsGestao] = useState<boolean | null>(null);
 
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [profileError, setProfileError] = useState("");
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    profile: "",
+  });
 
   const [loading, setLoading] = useState(false);
 
@@ -47,58 +49,83 @@ export default function SignUp() {
   async function handleSignUp(event: FormEvent) {
     event.preventDefault();
 
-    setNameError("");
-    setEmailError("");
-    setPasswordError("");
-    setConfirmPasswordError("");
-    setProfileError("");
+    setErrors({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      profile: "",
+    });
 
     let hasError = false;
 
-    // Validações de formulário
-    if (!name) {
-      setNameError("O campo de nome é obrigatório.");
+    if (!name.trim()) {
+      setErrors((prev) => ({
+        ...prev,
+        name: "O campo de nome é obrigatório.",
+      }));
       hasError = true;
     } else if (name.trim().split(" ").length < 2) {
-      setNameError("Preencha com nome e sobrenome.");
+      setErrors((prev) => ({
+        ...prev,
+        name: "Preencha com nome e sobrenome.",
+      }));
       hasError = true;
     }
 
-    if (!email) {
-      setEmailError("O campo de e-mail é obrigatório.");
+    if (!email.trim()) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "O campo de e-mail é obrigatório.",
+      }));
       hasError = true;
     } else if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) {
-      setEmailError("Por favor, insira um e-mail válido.");
+      setErrors((prev) => ({
+        ...prev,
+        email: "Por favor, insira um e-mail válido.",
+      }));
       hasError = true;
     }
 
     if (!password) {
-      setPasswordError("O campo de senha é obrigatório.");
+      setErrors((prev) => ({
+        ...prev,
+        password: "O campo de senha é obrigatório.",
+      }));
       hasError = true;
     } else if (!validatePassword(password)) {
-      setPasswordError(
-        "A senha deve conter entre 8 e 12 caracteres, incluindo ao menos uma letra maiúscula, um número e um caractere especial."
-      );
+      setErrors((prev) => ({
+        ...prev,
+        password:
+          "A senha deve conter entre 8 e 12 caracteres, incluindo ao menos uma letra maiúscula, um número e um caractere especial.",
+      }));
       hasError = true;
     }
 
     if (!confirmPassword) {
-      setConfirmPasswordError("Confirme sua senha.");
+      setErrors((prev) => ({
+        ...prev,
+        confirmPassword: "Confirme sua senha.",
+      }));
       hasError = true;
     } else if (password !== confirmPassword) {
-      setConfirmPasswordError("As senhas não coincidem.");
+      setErrors((prev) => ({
+        ...prev,
+        confirmPassword: "As senhas não coincidem.",
+      }));
       hasError = true;
     }
 
     if (isGestao === null) {
-      setProfileError("Por favor, selecione o perfil.");
+      setErrors((prev) => ({
+        ...prev,
+        profile: "Por favor, selecione o perfil.",
+      }));
       hasError = true;
     }
 
     if (hasError) {
-      toast.warning("Preencha os campos corretamente!", {
-        toastId: "warning-toast",
-      });
+      toast.warning("Preencha os campos corretamente!");
       return;
     }
 
@@ -106,15 +133,13 @@ export default function SignUp() {
 
     try {
       await signUp({ name, email, password, confirmPassword, isGestao });
-      toast.success("Cadastro realizado com sucesso!", {
-        toastId: "success-toast",
-      });
+      toast.success("Cadastro realizado com sucesso!");
       router.push("/");
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error ||
         "Erro ao realizar cadastro. Tente novamente.";
-      toast.error(errorMessage, { toastId: "error-toast" });
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -123,26 +148,26 @@ export default function SignUp() {
   return (
     <>
       <Head>
-        <title>E2E Burguer - Faça seu cadastro agora!</title>
+        <title>E2E Burguer - Cadastro</title>
       </Head>
       <div className={styles.containerCenter}>
-        <Image src={logoImg} alt="Logo E2E Burguer" />
-        <div className={styles.login}>
+        <div className={styles.signup}>
+          <Image src={logoImg} alt="Logo E2E Burguer" className={styles.logo} />
           <h1>Crie sua conta</h1>
-          <form onSubmit={handleSignUp}>
+          <form onSubmit={handleSignUp} className={styles.signupForm}>
             <Input
               placeholder="Digite seu nome"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            {nameError && <p className={styles.errorText}>{nameError}</p>}
+            {errors.name && <p className={styles.errorText}>{errors.name}</p>}
 
             <Input
               placeholder="Digite seu e-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            {emailError && <p className={styles.errorText}>{emailError}</p>}
+            {errors.email && <p className={styles.errorText}>{errors.email}</p>}
 
             <Input
               placeholder="Sua senha"
@@ -150,8 +175,8 @@ export default function SignUp() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {passwordError && (
-              <p className={styles.errorText}>{passwordError}</p>
+            {errors.password && (
+              <p className={styles.errorText}>{errors.password}</p>
             )}
 
             <Input
@@ -160,39 +185,42 @@ export default function SignUp() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            {confirmPasswordError && (
-              <p className={styles.errorText}>{confirmPasswordError}</p>
+            {errors.confirmPassword && (
+              <p className={styles.errorText}>{errors.confirmPassword}</p>
             )}
 
             <div className={styles.profileSelection}>
-              <label>
+              <label>Qual seu perfil de usuário?</label>
+              <div>
                 <input
                   type="radio"
+                  id="profile-gestao"
                   name="profile"
                   value="gestao"
                   checked={isGestao === true}
                   onChange={() => setIsGestao(true)}
                 />
-                Usuário Gestão
-              </label>
-              <label>
+                <label htmlFor="yes">Gestão</label>
                 <input
                   type="radio"
+                  id="profile-salao"
                   name="profile"
                   value="salao"
                   checked={isGestao === false}
                   onChange={() => setIsGestao(false)}
                 />
-                Usuário Salão
-              </label>
-              {profileError && (
-                <p className={styles.errorText}>{profileError}</p>
+                <label htmlFor="no">Salão</label>
+              </div>
+              {errors.profile && (
+                <p className={styles.errorText}>{errors.profile}</p>
               )}
             </div>
 
             <Button loading={loading}>Cadastrar</Button>
           </form>
-          <Link href="/">Já possui uma conta? Faça seu login!</Link>
+          <Link href="/" className={styles.text}>
+            Já possui uma conta? Faça seu login!
+          </Link>
         </div>
       </div>
     </>

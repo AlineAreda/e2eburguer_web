@@ -1,44 +1,16 @@
 .footer {
-  background-color: #1a1a1a;
-  color: #fff;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: var(--dark-bg);
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--gray-300);
+}
 
-  .footerContent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+.footer a {
+  color: var(--yellow-500);
+  text-decoration: none;
+}
 
-    .logo {
-      margin-bottom: 15px;
-    }
-
-    .info {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-
-      .item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-        .icon {
-          color: #ffcc00;
-          font-size: 20px;
-        }
-
-        a {
-          color: #fff;
-          text-decoration: none;
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
-    }
-  }
+.footer a:hover {
+  text-decoration: underline;
 }

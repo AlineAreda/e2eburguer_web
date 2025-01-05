@@ -135,9 +135,14 @@ export default function Product({ categoryList }: CategoryProps) {
               )}
             </label>
 
-            <select value={categorySelected} onChange={handleChangeCategory}>
-              {categories.map((item, index) => (
-                <option key={item.id} value={index}>
+            <select value={categorySelected} onChange={handleChangeCategory}
+            data-testid="category-select"
+            name="category"
+            required
+            >
+              <option value="" disabled>Selecione uma categoria</option>
+              {categories.map((item) => (
+                <option key={item.id} value={item.id} data-testid={`category-option-${item.id}`}>
                   {item.name}
                 </option>
               ))}
