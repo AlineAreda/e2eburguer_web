@@ -2,14 +2,9 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import Head from "next/head";
 import styles from "./styles.module.scss";
 import { Header } from "../../components/Header";
-
-
 import { canSSRAuth } from "../../utils/canSSRAuth";
-
 import { FiUpload } from "react-icons/fi";
-
 import { setupAPIClient } from "../../services/api";
-
 import { toast } from "react-toastify";
 
 type ItemProps = {
@@ -25,12 +20,10 @@ export default function Product({ categoryList }: CategoryProps) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-
   const [avatarUrl, setAvatarUrl] = useState("");
   const [imageAvatar, setImageAvatar] = useState<File | null>(null);
-
   const [categories, setCategories] = useState(categoryList || []);
-  const [categorySelected, setCategorySelected] = useState(0);
+  const [categorySelected, setCategorySelected] = useState("");
 
   function handleFile(e: ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) {
@@ -54,13 +47,18 @@ export default function Product({ categoryList }: CategoryProps) {
   }
 
   function handleChangeCategory(event: ChangeEvent<HTMLSelectElement>) {
-    setCategorySelected(Number(event.target.value));
+    setCategorySelected(event.target.value);
   }
 
   async function handleRegister(event: FormEvent) {
     event.preventDefault();
 
-    if (name === "" || price === "" || description === "") {
+    if (
+      !categorySelected ||
+      name === "" ||
+      price === "" ||
+      description === ""
+    ) {
       toast.warning("Preencha todos os campos obrigatórios!", {
         toastId: "warning-toast",
       });
@@ -73,7 +71,7 @@ export default function Product({ categoryList }: CategoryProps) {
       data.append("name", name);
       data.append("price", price);
       data.append("description", description);
-      data.append("category_id", categories[categorySelected].id);
+      data.append("category_id", categorySelected);
 
       // Só adicione a imagem se ela estiver presente
       if (imageAvatar) {
@@ -93,6 +91,7 @@ export default function Product({ categoryList }: CategoryProps) {
       setDescription("");
       setImageAvatar(null);
       setAvatarUrl("");
+      setCategorySelected(""); // Resetar a seleção da categoria
     } catch (err) {
       console.error(err);
       toast.error("Ops... Erro ao cadastrar!", {
