@@ -21,6 +21,28 @@
   display: flex;
   align-items: center;
 
+  a {
+    color: var(--white); /* Cor branca padrão para os links */
+    padding: 0 0.5rem;
+    display: inline-block;
+    position: relative;
+    transition: color 0.3s ease; /* Transição suave ao passar o mouse */
+
+    & + a {
+      margin-left: 2rem;
+    }
+
+    &:hover {
+      color: var(--yellon-900); /* Cor amarela ao passar o mouse */
+    }
+  }
+
+  .activeLink {
+    color: var(--yellon-900); /* Cor amarela para o link ativo */
+    font-weight: bold; /* Destaque no link ativo */
+    text-decoration: underline; /* Linha sob o link ativo */
+  }
+
   .userAvatar {
     display: flex;
     align-items: center;
@@ -41,32 +63,10 @@
     }
 
     .greeting {
-      color: var(--white);
+      color: var(--white); /* Mantém a saudação branca */
       font-size: 1rem;
       font-weight: 500;
     }
-  }
-
-  a {
-    color: var(--white); /* Cor dos links */
-    padding: 0 0.5rem;
-    display: inline-block;
-    position: relative;
-    transition: color 0.3s ease; 
-
-    & + a {
-      margin-left: 2rem;
-    }
-
-    &:hover {
-      color: var(--yellon-900); /* Cor amarela ao passar o mouse */
-    }
-  }
-
-  .activeLink {
-    color: var(--yellon-900); /* Cor amarela para o link ativo */
-    font-weight: bold;
-    text-decoration: underline; /* Adiciona destaque ao link ativo */
   }
 
   button {
@@ -80,3 +80,4 @@
     }
   }
 }
+
