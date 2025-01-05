@@ -27,7 +27,8 @@ type SignUpProps = {
   name: string;
   email: string;
   password: string;
-  confirmPassword: string; // Adiciona confirmPassword
+  confirmPassword: string;
+  isGestao: boolean | null; // Adicionado o campo isGestao
 };
 
 type AuthProviderProps = {
@@ -41,7 +42,7 @@ export function signOut() {
     destroyCookie(undefined, "@nextauth.token");
     Router.push("/");
   } catch {
-    console.log("erro ao deslogar");
+    console.log("Erro ao deslogar");
   }
 }
 
@@ -89,6 +90,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     email,
     password,
     confirmPassword,
+    isGestao,
   }: SignUpProps) {
     try {
       const response = await api.post("/user", {
@@ -96,6 +98,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email,
         password,
         confirmPassword,
+        isGestao, // Envia o campo isGestao para o backend
       });
 
       toast.success("Cadastro realizado com sucesso!");
