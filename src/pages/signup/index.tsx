@@ -158,7 +158,7 @@ export default function SignUp() {
             className={styles.logo}
             data-testid="signup-logo"
           />
-          <h1>Crie sua conta</h1>
+          <h1 className={styles.title}>Crie sua conta</h1>
           <form
             onSubmit={handleSignUp}
             className={styles.signupForm}
@@ -206,29 +206,35 @@ export default function SignUp() {
               <p className={styles.errorText}>{errors.confirmPassword}</p>
             )}
 
-            <div className={styles.profileSelection}>
-              <label>Qual seu perfil de usuário?</label>
+            <div className={styles.radioContainer}>
+              <label className={styles.radioTitle}>
+                Qual seu perfil de usuário?
+              </label>
               <div>
-                <input
-                  type="radio"
-                  id="profile-gestao"
-                  name="profile"
-                  value="gestao"
-                  checked={isGestao === true}
-                  onChange={() => setIsGestao(true)}
-                  data-testid="radio-gestao"
-                />
-                <label htmlFor="profile-gestao">Gestão</label>
-                <input
-                  type="radio"
-                  id="profile-salao"
-                  name="profile"
-                  value="salao"
-                  checked={isGestao === false}
-                  onChange={() => setIsGestao(false)}
-                  data-testid="radio-salao"
-                />
-                <label htmlFor="profile-salao">Salão</label>
+                <label>
+                  <input
+                    type="radio"
+                    id="profile-gestao"
+                    name="profile"
+                    value="gestao"
+                    checked={isGestao === true}
+                    onChange={() => setIsGestao(true)}
+                    data-testid="radio-gestao"
+                  />
+                  <span>Gestão</span>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    id="profile-salao"
+                    name="profile"
+                    value="salao"
+                    checked={isGestao === false}
+                    onChange={() => setIsGestao(false)}
+                    data-testid="radio-salao"
+                  />
+                  <span>Salão</span>
+                </label>
               </div>
               {errors.profile && (
                 <p className={styles.errorText}>{errors.profile}</p>
