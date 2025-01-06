@@ -25,6 +25,11 @@ export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
+  // Estado para o formulário de edição
+  const [editingProduct, setEditingProduct] = useState<ProductProps | null>(
+    null
+  );
+
   useEffect(() => {
     async function loadInitialData() {
       const apiClient = setupAPIClient();
@@ -74,9 +79,35 @@ export default function Products() {
   }
 
   function openUpdateForm(product: ProductProps) {
-    // Lógica para abrir o formulário de atualização
-    toast.info(`Abrindo formulário para atualizar o produto: ${product.name}`);
-    // Implementar modal ou redirecionar para página de edição com os dados
+    setEditingProduct(product); // Define o produto em edição
+  }
+
+  async function handleUpdateProduct(event: React.FormEvent) {
+    event.preventDefault();
+
+    if (!editingProduct) return;
+
+    const apiClient = setupAPIClient();
+    try {
+      const { id, name, description, price, category } = editingProduct;
+
+      await apiClient.patch(`/product/${id}`, {
+        name,
+        description,
+        price,
+        category,
+      });
+
+      toast.success("Produto atualizado com sucesso!");
+
+      setEditingProduct(null);
+
+      // Atualizar a lista de produtos
+      const updatedProducts = await apiClient.get("/products");
+      setProducts(updatedProducts.data);
+    } catch (error) {
+      toast.error("Erro ao atualizar produto.");
+    }
   }
 
   return (
@@ -106,10 +137,71 @@ export default function Products() {
             ))}
           </select>
 
+          {editingProduct && (
+            <form
+              className={styles.editForm}
+              onSubmit={handleUpdateProduct}
+              data-testid="edit-form"
+            >
+              <h2>Editar Produto</h2>
+              <input
+                type="text"
+                value={editingProduct.name}
+                onChange={(e) =>
+                  setEditingProduct({
+                    ...editingProduct,
+                    name: e.target.value,
+                  })
+                }
+                placeholder="Nome do produto"
+              />
+              <textarea
+                value={editingProduct.description}
+                onChange={(e) =>
+                  setEditingProduct({
+                    ...editingProduct,
+                    description: e.target.value,
+                  })
+                }
+                placeholder="Descrição do produto"
+              />
+              <input
+                type="text"
+                value={editingProduct.price}
+                onChange={(e) =>
+                  setEditingProduct({
+                    ...editingProduct,
+                    price: e.target.value,
+                  })
+                }
+                placeholder="Preço do produto"
+              />
+              <select
+                value={editingProduct.category}
+                onChange={(e) =>
+                  setEditingProduct({
+                    ...editingProduct,
+                    category: e.target.value,
+                  })
+                }
+              >
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+              <button type="submit">Salvar Alterações</button>
+              <button type="button" onClick={() => setEditingProduct(null)}>
+                Cancelar
+              </button>
+            </form>
+          )}
+
           {loading ? (
             <p>Carregando produtos...</p>
           ) : products.length === 0 ? (
-            <p>Nenhum produto encontrado.</p>
+            <p>Nenhum produto encontrado!</p>
           ) : (
             <ul className={styles.productList}>
               {products.map((product) => (
