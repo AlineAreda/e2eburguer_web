@@ -26,15 +26,9 @@ export default function Product({ categoryList }: CategoryProps) {
   const [categorySelected, setCategorySelected] = useState("");
 
   function handleFile(e: ChangeEvent<HTMLInputElement>) {
-    if (!e.target.files) {
-      return;
-    }
+    if (!e.target.files) return;
 
     const image = e.target.files[0];
-
-    if (!image) {
-      return;
-    }
 
     if (
       image.type === "image/jpeg" ||
@@ -46,6 +40,20 @@ export default function Product({ categoryList }: CategoryProps) {
     }
   }
 
+  function handlePriceChange(e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    if (/^[0-9]*[.,]?[0-9]*$/.test(value)) {
+      setPrice(value.replace(",", "."));
+    }
+  }
+
+  function handlePriceBlur() {
+    if (price) {
+      const formattedPrice = parseFloat(price).toFixed(2).replace(".", ",");
+      setPrice(formattedPrice);
+    }
+  }
+
   function handleChangeCategory(event: ChangeEvent<HTMLSelectElement>) {
     setCategorySelected(event.target.value);
   }
@@ -53,27 +61,20 @@ export default function Product({ categoryList }: CategoryProps) {
   async function handleRegister(event: FormEvent) {
     event.preventDefault();
 
-    if (
-      !categorySelected ||
-      name === "" ||
-      price === "" ||
-      description === ""
-    ) {
-      toast.warning("Preencha todos os campos obrigatórios!", {
-        toastId: "warning-toast",
-      });
+    if (!categorySelected || name === "" || price === "" || description === "") {
+      toast.warning("Preencha todos os campos obrigatórios!");
       return;
     }
 
+    const formattedPrice = price.replace(",", ".");
+
     try {
       const data = new FormData();
-
       data.append("name", name);
-      data.append("price", price);
+      data.append("price", formattedPrice);
       data.append("description", description);
       data.append("category_id", categorySelected);
 
-      // Só adicione a imagem se ela estiver presente
       if (imageAvatar) {
         data.append("banner", imageAvatar);
       }
@@ -81,22 +82,17 @@ export default function Product({ categoryList }: CategoryProps) {
       const apiClient = setupAPIClient();
       await apiClient.post("/product", data);
 
-      toast.success("Produto cadastrado com sucesso!", {
-        toastId: "success-toast",
-      });
+      toast.success("Produto cadastrado com sucesso!");
 
-      // Limpar os campos após o cadastro
       setName("");
       setPrice("");
       setDescription("");
       setImageAvatar(null);
       setAvatarUrl("");
-      setCategorySelected(""); // Resetar a seleção da categoria
+      setCategorySelected("");
     } catch (err) {
       console.error(err);
-      toast.error("Ops... Erro ao cadastrar!", {
-        toastId: "error-toast",
-      });
+      toast.error("Erro ao cadastrar produto!");
     }
   }
 
@@ -107,57 +103,46 @@ export default function Product({ categoryList }: CategoryProps) {
       </Head>
       <div>
         <Header />
-
         <main className={styles.container}>
           <h1>Novo produto</h1>
-
           <form className={styles.form} onSubmit={handleRegister}>
             <label className={styles.labelAvatar}>
-              <span>
-                <FiUpload size={30} color="#FFF" />
-              </span>
-
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="Foto do produto" />
+              ) : (
+                <span>
+                  <FiUpload size={30} color="#FFF" />
+                </span>
+              )}
               <input
                 type="file"
                 accept="image/png, image/jpeg, image/webp"
                 onChange={handleFile}
               />
-
-              {avatarUrl && (
-                <img
-                  className={styles.preview}
-                  src={avatarUrl}
-                  alt="Foto do produto"
-                  width={250}
-                  height={250}
-                />
-              )}
             </label>
 
             <select
               value={categorySelected}
               onChange={handleChangeCategory}
-              data-testid="category-select"
-              name="category"
-              required
+              className={styles.selectCategory}
             >
               <option value="" disabled>
                 Selecione uma categoria
               </option>
               {categories.map((item) => (
-                <option
-                  key={item.id}
-                  value={item.id}
-                  data-testid={`category-option-${item.id}`}
-                >
+                <option key={item.id} value={item.id}>
                   {item.name}
                 </option>
               ))}
             </select>
+            {!categorySelected && (
+              <p className={styles.errorMessage}>
+                Selecione uma categoria para continuar.
+              </p>
+            )}
 
             <input
               type="text"
-              data-testid="name-product"
               placeholder="Digite o nome do produto..."
               className={styles.input}
               value={name}
@@ -166,26 +151,21 @@ export default function Product({ categoryList }: CategoryProps) {
 
             <input
               type="text"
-              data-testid="price-product"
               placeholder="Preço do produto..."
               className={styles.input}
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={handlePriceChange}
+              onBlur={handlePriceBlur}
             />
 
             <textarea
               placeholder="Descreva o produto..."
-              data-testid="description-product"
               className={styles.input}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
 
-            <button
-              className={styles.buttonAdd}
-              type="submit"
-              data-testid="btn-cadastrar"
-            >
+            <button className={styles.buttonAdd} type="submit">
               Cadastrar
             </button>
           </form>
@@ -197,7 +177,6 @@ export default function Product({ categoryList }: CategoryProps) {
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
   const apiClient = setupAPIClient(ctx);
-
   const response = await apiClient.get("/category/list");
 
   return {

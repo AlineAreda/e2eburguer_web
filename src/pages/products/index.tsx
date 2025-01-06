@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { FiEdit, FiTrash } from "react-icons/fi";
 import { FiUpload } from "react-icons/fi";
 
-// Tipos de Produto e Categoria
 type ProductProps = {
   id: string;
   name: string;
@@ -127,6 +126,11 @@ export default function Products() {
     }
   }
 
+  function formatPrice(value: string): string {
+    const parsedValue = parseFloat(value.replace(",", "."));
+    return `R$ ${parsedValue.toFixed(2).replace(".", ",")}`;
+  }
+
   return (
     <>
       <Head>
@@ -137,7 +141,6 @@ export default function Products() {
         <main className={styles.container}>
           <h1 className={styles.title}>Produtos</h1>
 
-          {/* Filtro por categoria */}
           <select
             value={selectedCategory}
             onChange={(e) => {
@@ -202,6 +205,15 @@ export default function Products() {
                   })
                 }
                 placeholder="Preço do produto"
+                onBlur={() => {
+                  const formattedPrice = parseFloat(editingProduct.price)
+                    .toFixed(2)
+                    .replace(".", ",");
+                  setEditingProduct({
+                    ...editingProduct,
+                    price: formattedPrice,
+                  });
+                }}
               />
               <select
                 value={editingProduct.category}
@@ -254,7 +266,7 @@ export default function Products() {
                     {product.description}
                   </p>
                   <span className={styles.productPrice}>
-                    R$ {parseFloat(product.price).toFixed(2)}
+                    {formatPrice(product.price)}
                   </span>
                 </li>
               ))}
