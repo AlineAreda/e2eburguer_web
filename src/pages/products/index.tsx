@@ -6,6 +6,7 @@ import { setupAPIClient } from "../../services/api";
 import { toast } from "react-toastify";
 import { FiEdit, FiTrash } from "react-icons/fi";
 
+// Tipos de Produto e Categoria
 type ProductProps = {
   id: string;
   name: string;
@@ -25,7 +26,6 @@ export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
-  // Estado para o formulário de edição
   const [editingProduct, setEditingProduct] = useState<ProductProps | null>(
     null
   );
@@ -79,7 +79,7 @@ export default function Products() {
   }
 
   function openUpdateForm(product: ProductProps) {
-    setEditingProduct(product); // Define o produto em edição
+    setEditingProduct(product);
   }
 
   async function handleUpdateProduct(event: React.FormEvent) {
@@ -99,10 +99,8 @@ export default function Products() {
       });
 
       toast.success("Produto atualizado com sucesso!");
-
       setEditingProduct(null);
 
-      // Atualizar a lista de produtos
       const updatedProducts = await apiClient.get("/products");
       setProducts(updatedProducts.data);
     } catch (error) {
@@ -141,7 +139,6 @@ export default function Products() {
             <form
               className={styles.editForm}
               onSubmit={handleUpdateProduct}
-              data-testid="edit-form"
             >
               <h2>Editar Produto</h2>
               <input
@@ -206,27 +203,29 @@ export default function Products() {
             <ul className={styles.productList}>
               {products.map((product) => (
                 <li key={product.id} className={styles.productItem}>
-                  <strong className={styles.productName}>{product.name}</strong>
+                  <div className={styles.productHeader}>
+                    <strong className={styles.productName}>{product.name}</strong>
+                    <div className={styles.actions}>
+                      <button
+                        onClick={() => openUpdateForm(product)}
+                        className={styles.editButton}
+                      >
+                        <FiEdit size={20} />
+                      </button>
+                      <button
+                        onClick={() => deleteProduct(product.id)}
+                        className={styles.deleteButton}
+                      >
+                        <FiTrash size={20} />
+                      </button>
+                    </div>
+                  </div>
                   <p className={styles.productDescription}>
                     {product.description}
                   </p>
                   <span className={styles.productPrice}>
                     R$ {parseFloat(product.price).toFixed(2)}
                   </span>
-                  <div className={styles.actions}>
-                    <button
-                      onClick={() => openUpdateForm(product)}
-                      className={styles.editButton}
-                    >
-                      <FiEdit size={20} />
-                    </button>
-                    <button
-                      onClick={() => deleteProduct(product.id)}
-                      className={styles.deleteButton}
-                    >
-                      <FiTrash size={20} />
-                    </button>
-                  </div>
                 </li>
               ))}
             </ul>

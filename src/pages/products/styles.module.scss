@@ -33,14 +33,13 @@
   border-radius: 0.3rem;
   padding: 1rem;
   margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
+  position: relative; /* Para permitir o posicionamento absoluto dos ícones */
 }
 
 .productName {
   font-size: 1.2rem;
-  margin-bottom: 1rem; /* Maior espaçamento entre título e descrição */
-  color: var(--yellon-900); /* Cor amarela */
+  margin-bottom: 0.5rem; /* Refinado para um espaçamento ideal */
+  color: var(--yellon-900); /* Cor amarela para o título */
 }
 
 .productDescription {
@@ -50,14 +49,15 @@
 
 .productPrice {
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
 }
 
 .actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
   display: flex;
-  justify-content: flex-end;
   gap: 0.5rem;
-  margin-top: 1rem;
 }
 
 .editButton,
