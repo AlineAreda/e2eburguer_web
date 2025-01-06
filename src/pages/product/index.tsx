@@ -37,25 +37,30 @@ export default function Product({ categoryList }: CategoryProps) {
     ) {
       setImageAvatar(image);
       setAvatarUrl(URL.createObjectURL(image));
+    } else {
+      toast.warning("Formato de arquivo não suportado!");
     }
+  }
+
+  function handleChangeCategory(event: ChangeEvent<HTMLSelectElement>) {
+    setCategorySelected(event.target.value);
   }
 
   function handlePriceChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
+
+    // Permitir apenas números, vírgula e ponto no campo
     if (/^[0-9]*[.,]?[0-9]*$/.test(value)) {
       setPrice(value.replace(",", "."));
     }
   }
 
   function handlePriceBlur() {
+    // Formatar o valor ao sair do campo, adicionando duas casas decimais
     if (price) {
       const formattedPrice = parseFloat(price).toFixed(2).replace(".", ",");
       setPrice(formattedPrice);
     }
-  }
-
-  function handleChangeCategory(event: ChangeEvent<HTMLSelectElement>) {
-    setCategorySelected(event.target.value);
   }
 
   async function handleRegister(event: FormEvent) {
@@ -66,15 +71,16 @@ export default function Product({ categoryList }: CategoryProps) {
       return;
     }
 
-    const formattedPrice = price.replace(",", ".");
-
     try {
+      const formattedPrice = price.replace(",", "."); // Converter para formato aceito pelo backend
       const data = new FormData();
+
       data.append("name", name);
       data.append("price", formattedPrice);
       data.append("description", description);
       data.append("category_id", categorySelected);
 
+      // Adicionar o banner apenas se estiver presente
       if (imageAvatar) {
         data.append("banner", imageAvatar);
       }
@@ -84,6 +90,7 @@ export default function Product({ categoryList }: CategoryProps) {
 
       toast.success("Produto cadastrado com sucesso!");
 
+      // Limpar os campos após o cadastro
       setName("");
       setPrice("");
       setDescription("");
@@ -103,28 +110,37 @@ export default function Product({ categoryList }: CategoryProps) {
       </Head>
       <div>
         <Header />
+
         <main className={styles.container}>
           <h1>Novo produto</h1>
+
           <form className={styles.form} onSubmit={handleRegister}>
             <label className={styles.labelAvatar}>
-              {avatarUrl ? (
-                <img src={avatarUrl} alt="Foto do produto" />
-              ) : (
-                <span>
-                  <FiUpload size={30} color="#FFF" />
-                </span>
-              )}
+              <span>
+                <FiUpload size={30} color="#FFF" />
+              </span>
+
               <input
                 type="file"
                 accept="image/png, image/jpeg, image/webp"
                 onChange={handleFile}
               />
+
+              {avatarUrl && (
+                <img
+                  className={styles.preview}
+                  src={avatarUrl}
+                  alt="Foto do produto"
+                  width={250}
+                  height={250}
+                />
+              )}
             </label>
 
             <select
               value={categorySelected}
               onChange={handleChangeCategory}
-              className={styles.selectCategory}
+              required
             >
               <option value="" disabled>
                 Selecione uma categoria
@@ -135,11 +151,6 @@ export default function Product({ categoryList }: CategoryProps) {
                 </option>
               ))}
             </select>
-            {!categorySelected && (
-              <p className={styles.errorMessage}>
-                Selecione uma categoria para continuar.
-              </p>
-            )}
 
             <input
               type="text"
@@ -177,6 +188,7 @@ export default function Product({ categoryList }: CategoryProps) {
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
   const apiClient = setupAPIClient(ctx);
+
   const response = await apiClient.get("/category/list");
 
   return {
