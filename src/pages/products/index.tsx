@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import Head from "next/head";
 import styles from "./styles.module.scss";
 import { Header } from "../../components/Header";
 import { setupAPIClient } from "../../services/api";
 import { toast } from "react-toastify";
 import { FiEdit, FiTrash } from "react-icons/fi";
+import { FiUpload } from "react-icons/fi";
 
 // Tipos de Produto e Categoria
 type ProductProps = {
@@ -13,6 +14,7 @@ type ProductProps = {
   description: string;
   price: string;
   category: string;
+  banner_url?: string;
 };
 
 type CategoryProps = {
@@ -29,6 +31,9 @@ export default function Products() {
   const [editingProduct, setEditingProduct] = useState<ProductProps | null>(
     null
   );
+
+  const [banner, setBanner] = useState<File | null>(null);
+  const [previewBanner, setPreviewBanner] = useState<string>("");
 
   useEffect(() => {
     async function loadInitialData() {
@@ -80,6 +85,15 @@ export default function Products() {
 
   function openUpdateForm(product: ProductProps) {
     setEditingProduct(product);
+    setPreviewBanner(product.banner_url || "");
+  }
+
+  function handleFile(e: ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files) return;
+
+    const file = e.target.files[0];
+    setBanner(file);
+    setPreviewBanner(URL.createObjectURL(file));
   }
 
   async function handleUpdateProduct(event: React.FormEvent) {
@@ -91,12 +105,17 @@ export default function Products() {
     try {
       const { id, name, description, price, category } = editingProduct;
 
-      await apiClient.patch(`/product/${id}`, {
-        name,
-        description,
-        price,
-        category,
-      });
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("category", category);
+
+      if (banner) {
+        formData.append("banner", banner);
+      }
+
+      await apiClient.patch(`/product/${id}`, formData);
 
       toast.success("Produto atualizado com sucesso!");
       setEditingProduct(null);
@@ -139,8 +158,19 @@ export default function Products() {
             <form
               className={styles.editForm}
               onSubmit={handleUpdateProduct}
+              data-testid="edit-form"
             >
               <h2>Editar Produto</h2>
+              <label className={styles.labelAvatar}>
+                {previewBanner ? (
+                  <img src={previewBanner} alt="Banner do produto" />
+                ) : (
+                  <span>
+                    <FiUpload size={30} color="#FFF" />
+                  </span>
+                )}
+                <input type="file" accept="image/*" onChange={handleFile} />
+              </label>
               <input
                 type="text"
                 value={editingProduct.name}
