@@ -44,3 +44,9 @@
   font-size: 14px;
   margin-top: 10px;
 }
+
+@media (max-width: 620px) {
+  .containerCenter {
+    flex-direction: column;
+  }
+}

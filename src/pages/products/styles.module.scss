@@ -163,3 +163,9 @@
     background-color: var(--red-hover);
   }
 }
+
+@media (max-width: 620px) {
+  .containerCenter {
+    flex-direction: column;
+  }
+}

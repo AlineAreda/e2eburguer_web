@@ -80,3 +80,36 @@
     }
   }
 }
+
+/* Media Query para telas menores */
+@media (max-width: 620px) {
+  .headerContent {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .menuNav {
+    flex-direction: column;
+    align-items: center;
+
+    a {
+      margin-left: 0;
+      margin-bottom: 1rem;
+      font-size: 0.9rem; /* Reduz o tamanho da fonte */
+    }
+  }
+
+  .userAvatar {
+    margin-top: 1rem;
+
+    .avatar {
+      width: 2rem;
+      height: 2rem;
+      font-size: 0.8rem; /* Ajusta o tamanho do avatar */
+    }
+
+    .greeting {
+      font-size: 0.8rem; /* Reduz a fonte para telas menores */
+    }
+  }
+}

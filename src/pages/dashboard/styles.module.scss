@@ -59,3 +59,9 @@
     font-size: 1.2rem;
     color: var(--gray-100);
 }
+
+@media (max-width: 620px) {
+  .containerCenter {
+    flex-direction: column;
+  }
+}
