@@ -34,10 +34,13 @@
 .logo {
   width: 200px;
   height: auto;
-  margin-bottom: 1rem; 
+  margin-bottom: 0.5rem; 
 }
 
-
+h1 {
+  color: var(--white);
+  padding-bottom: 1rem;
+}
 
 /* Estilo específico para o formulário */
 .loginForm {
