@@ -92,6 +92,7 @@ export default function Home() {
       {/* Seção do Formulário */}
       <div className={styles.login}>
         <img src="/logo.svg" alt="Logo E2E Burguer" className={styles.logo} />
+        <h1 className={styles.title}>Faça seu login</h1>
         <form className={styles.loginForm} onSubmit={handleLogin}>
           <Input
             id="email"
