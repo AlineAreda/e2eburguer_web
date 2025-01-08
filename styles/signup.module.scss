@@ -99,11 +99,7 @@
   cursor: pointer;
 }
 
-@media (max-width: 620px) {
-  .login {
-    width: 90%;
-  }
-}
+
 
 .text {
   margin-top: 1rem;
@@ -112,8 +108,21 @@
   cursor: pointer;
 }
 
-@media (max-width: 620px) {
-  .login {
-    width: 90%;
+  @media (max-width: 620px) {
+    .signup {
+      width: 90%;
+    }
+    .signup {
+      flex: unset;
+      width: 100%;
+      padding: 1rem;
+    }
+    
+    .title {
+      text-align: center; /* Centraliza o título em telas pequenas */
+      align-self: center; /* Ajusta alinhamento */
+      font-size: 1.3rem; /* Reduz tamanho do título */
+    }
+  
   }
-}
+
