@@ -75,14 +75,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const response = await api.post("/session", { email, password });
       const { id, name, token, isGestao } = response.data;
 
+      // Armazena o token nos cookies
       setCookie(undefined, "@nextauth.token", token, {
         maxAge: 60 * 60 * 24 * 30, // 30 dias
         path: "/",
       });
 
+      // Atualiza o estado do usuário
       setUser({ id, name, email, isGestao });
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
+      // Exibe mensagens de sucesso ou direciona para app-info
+      toast.dismiss(); // Remove mensagens ativas
       if (isGestao) {
         toast.success("Login realizado com sucesso!");
         Router.push("/dashboard");
@@ -92,7 +96,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
     } catch (err) {
       console.error("Erro ao realizar login:", err);
-      toast.error("Erro ao acessar, verifique suas credenciais de acesso!");
+      toast.error("Credenciais inválidas. Verifique seu e-mail e senha.");
     }
   }
 
