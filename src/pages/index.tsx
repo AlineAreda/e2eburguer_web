@@ -49,25 +49,25 @@ export default function Home() {
     try {
       const response = (await signIn({ email, password })) as unknown as {
         ok: boolean;
-        data: { token: string }; // Backend retorna o token
+        data: { token: string };
       };
 
       if (response.ok) {
         const { token } = response.data;
-        const decoded = decodeToken(token); // Decodifica o token no frontend
+        const decoded = decodeToken(token);
 
         if (decoded && decoded.isGestao) {
           toast.success("Login realizado com sucesso!", {
             toastId: "success-toast",
           });
-          localStorage.setItem("@nextauth.token", token); // Salva o token
-          window.location.href = "/dashboard"; // Redireciona para o dashboard
+          localStorage.setItem("@nextauth.token", token);
+          window.location.href = "/dashboard";
         } else if (decoded && !decoded.isGestao) {
           toast.warning("Acesse através do app!", {
             toastId: "warning-toast",
           });
-          window.location.href = "/app-info"; // Redireciona para a página informativa
-          localStorage.removeItem("@nextauth.token"); // Garante que o token não seja salvo
+          localStorage.removeItem("@nextauth.token");
+          window.location.href = "/app-info";
         } else {
           toast.error("Token inválido. Por favor, realize o login novamente.", {
             toastId: "error-toast",
@@ -79,7 +79,10 @@ export default function Home() {
         });
       }
     } catch (error) {
-      toast.error("Ocorreu um erro. Tente novamente.");
+      console.error("Erro no login:", error);
+      toast.error("Ocorreu um erro. Tente novamente.", {
+        toastId: "error-toast",
+      });
     } finally {
       setLoading(false);
     }
