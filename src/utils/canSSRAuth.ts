@@ -22,7 +22,7 @@ export function canSSRAuth<P extends { [key: string]: any }>(fn: GetServerSidePr
         if (!user || !user.isGestao) {
             return {
                 redirect: {
-                    destination: '/app-access',
+                    destination: '/app-info',
                     permanent: false,
                 },
             };
