@@ -8,7 +8,7 @@ type AuthContextData = {
   user: UserProps | undefined;
   isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<void>;
-  signOut: () => void;
+  signOut: (showToast?: boolean) => void;
   signUp: (credentials: SignUpProps) => Promise<void>;
 };
 
@@ -38,13 +38,19 @@ type AuthProviderProps = {
 
 export const AuthContext = createContext({} as AuthContextData);
 
-export function signOut() {
+export function signOut(showToast = true) {
   try {
     destroyCookie(undefined, "@nextauth.token");
     Router.push("/");
+
+    if (showToast) {
+      toast.success("Você foi deslogado com sucesso.");
+    }
   } catch (err) {
     console.error("Erro ao deslogar:", err);
-    toast.error("Erro ao deslogar. Tente novamente.");
+    if (showToast) {
+      toast.error("Erro ao deslogar. Tente novamente.");
+    }
   }
 }
 
@@ -64,7 +70,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         })
         .catch((err) => {
           console.error("Erro ao validar token:", err);
-          signOut();
+          signOut(false); // Não exibe toast ao deslogar durante a validação
         });
     }
   }, []);
@@ -95,7 +101,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
     } catch (err) {
       console.error("Erro ao realizar login:", err);
-    //  toast.error("Credenciais inválidas. Verifique seu e-mail e senha.");
+      toast.error("Credenciais inválidas. Verifique seu e-mail e senha.");
     }
   }
 

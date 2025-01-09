@@ -39,6 +39,7 @@ export default function Home() {
     }
 
     if (hasError) {
+      toast.dismiss();
       toast.warning("Preencha os campos corretamente!", {
         toastId: "warning-toast",
       });
@@ -58,6 +59,7 @@ export default function Home() {
         const decoded = decodeToken(token);
 
         if (!token || !decoded) {
+          toast.dismiss();
           toast.error("Erro inesperado. Realize o login novamente.", {
             toastId: "error-toast",
           });
@@ -82,17 +84,22 @@ export default function Home() {
           Router.push("/app-info");
         }
       } else {
-        toast.dismiss(); // Remove mensagens de sucesso ativas
-        toast.warning("Credenciais inválidas. Verifique seu e-mail e senha.", {
-          toastId: "warning-toast",
+        toast.dismiss();
+        toast.error("Credenciais inválidas. Verifique seu e-mail e senha.", {
+          toastId: "error-toast",
         });
       }
     } catch (error) {
       console.error("Erro no login:", error);
+      toast.dismiss();
+      toast.error("Ocorreu um erro ao tentar logar. Tente novamente.", {
+        toastId: "error-toast",
+      });
     } finally {
       setLoading(false);
     }
   }
+
   return (
     <div className={styles.containerCenter}>
       <div className={styles.banner}>
