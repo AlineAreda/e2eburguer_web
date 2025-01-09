@@ -66,7 +66,8 @@ export default function Home() {
           toast.warning("Acesse através do app!", {
             toastId: "warning-toast",
           });
-          localStorage.removeItem("@nextauth.token"); // Remove token inválido para web
+          window.location.href = "/app-info"; // Redireciona para a página informativa
+          localStorage.removeItem("@nextauth.token"); // Garante que o token não seja salvo
         } else {
           toast.error("Token inválido. Por favor, realize o login novamente.", {
             toastId: "error-toast",
