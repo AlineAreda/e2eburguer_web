@@ -84,10 +84,10 @@ export default function Home() {
       }
     } catch (error) {
       console.error("Erro no login:", error);
-      toast.dismiss(); // Remove qualquer toast ativo
-      toast.error("Ocorreu um erro. Tente novamente.", {
-        toastId: "error-toast",
-      });
+    //  toast.dismiss(); // Remove qualquer toast ativo
+    //  toast.error("Ocorreu um erro. Tente novamente.", {
+    //    toastId: "error-toast",
+  //    });
     } finally {
       setLoading(false);
     }
