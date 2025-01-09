@@ -16,6 +16,7 @@ type UserProps = {
   id: string;
   name: string;
   email: string;
+  isGestao?: boolean; // Inclui o campo isGestao opcional
 };
 
 type SignInProps = {
@@ -28,7 +29,7 @@ type SignUpProps = {
   email: string;
   password: string;
   confirmPassword: string;
-  isGestao: boolean | null; // Adicionado o campo isGestao
+  isGestao: boolean | null;
 };
 
 type AuthProviderProps = {
@@ -41,8 +42,10 @@ export function signOut() {
   try {
     destroyCookie(undefined, "@nextauth.token");
     Router.push("/");
-  } catch {
-    console.log("Erro ao deslogar");
+    toast.success("Você foi deslogado com sucesso.");
+  } catch (err) {
+    console.error("Erro ao deslogar:", err);
+    toast.error("Erro ao deslogar. Tente novamente.");
   }
 }
 
@@ -57,10 +60,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       api
         .get("/user/detail")
         .then((response) => {
-          const { id, name, email } = response.data;
-          setUser({ id, name, email });
+          const { id, name, email, isGestao } = response.data;
+          setUser({ id, name, email, isGestao });
         })
-        .catch(() => {
+        .catch((err) => {
+          console.error("Erro ao validar token:", err);
           signOut();
         });
     }
@@ -69,18 +73,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function signIn({ email, password }: SignInProps) {
     try {
       const response = await api.post("/session", { email, password });
-      const { id, name, token } = response.data;
+      const { id, name, token, isGestao } = response.data;
 
       setCookie(undefined, "@nextauth.token", token, {
-        maxAge: 60 * 60 * 24 * 30,
+        maxAge: 60 * 60 * 24 * 30, // 30 dias
         path: "/",
       });
 
-      setUser({ id, name, email });
+      setUser({ id, name, email, isGestao });
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
-      toast.success("Login realizado com sucesso!");
-      Router.push("/dashboard");
+
+      if (isGestao) {
+        toast.success("Login realizado com sucesso!");
+        Router.push("/dashboard");
+      } else {
+        toast.warning("Acesse através do app.");
+        Router.push("/app-info");
+      }
     } catch (err) {
+      console.error("Erro ao realizar login:", err);
       toast.error("Erro ao acessar, verifique suas credenciais de acesso!");
     }
   }
@@ -93,23 +104,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isGestao,
   }: SignUpProps) {
     try {
-      const response = await api.post("/user", {
+      await api.post("/user", {
         name,
         email,
         password,
         confirmPassword,
-        isGestao, // Envia o campo isGestao para o backend
+        isGestao,
       });
 
       toast.success("Cadastro realizado com sucesso!");
       Router.push("/");
     } catch (err: any) {
+      console.error("Erro ao realizar cadastro:", err.response?.data || err);
       toast.error(
-        "Erro ao realizar cadastro. Tente novamente ou verifique um outro e-mail."
-      );
-      console.error(
-        "Erro ao realizar cadastro: ",
-        err.response?.data || err.message
+        "Erro ao realizar cadastro. Tente novamente ou use outro e-mail."
       );
     }
   }

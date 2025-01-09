@@ -5,6 +5,7 @@ import { Button } from "../components/ui/Button";
 import { AuthContext } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import { decodeToken } from "../utils/decodeToken";
+import Router from "next/router";
 import styles from "../../styles/home.module.scss";
 
 export default function Home() {
@@ -57,39 +58,40 @@ export default function Home() {
         const { token } = response.data;
         const decoded = decodeToken(token);
 
+        if (!token || !decoded) {
+          toast.error("Erro inesperado. Realize o login novamente.", {
+            toastId: "error-toast",
+          });
+          return;
+        }
+
         toast.dismiss(); // Remove toasts anteriores
-        if (decoded && decoded.isGestao) {
+        if (decoded.isGestao) {
           toast.success("Login realizado com sucesso!", {
             toastId: "success-toast",
           });
           localStorage.setItem("@nextauth.token", token);
-          window.location.href = "/dashboard";
-        } else if (decoded && !decoded.isGestao) {
+          Router.push("/dashboard");
+        } else {
           toast.warning("Acesse através do app!", {
             toastId: "warning-toast",
           });
           localStorage.removeItem("@nextauth.token");
-          window.location.href = "/app-info";
-        } else {
-          // Exibe erro para token inválido no fluxo principal
-          toast.error("Token inválido. Por favor, realize o login novamente.", {
-            toastId: "error-toast",
-          });
+          Router.push("/app-info");
         }
       } else {
-        // Exibe erro de credenciais inválidas no fluxo principal
         toast.dismiss();
-        toast.error("Erro ao acessar, verifique suas credenciais de acesso!", {
-          toastId: "error-toast",
+        toast.warning("Credenciais inválidas. Verifique seu e-mail e senha.", {
+          toastId: "warning-toast",
         });
       }
     } catch (error) {
       console.error("Erro no login:", error);
-      // Nenhum toast será exibido no catch
     } finally {
       setLoading(false);
     }
   }
+
   return (
     <div className={styles.containerCenter}>
       <div className={styles.banner}>
