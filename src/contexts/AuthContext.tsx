@@ -42,7 +42,6 @@ export function signOut() {
   try {
     destroyCookie(undefined, "@nextauth.token");
     Router.push("/");
-    toast.success("Você foi deslogado com sucesso.");
   } catch (err) {
     console.error("Erro ao deslogar:", err);
     toast.error("Erro ao deslogar. Tente novamente.");
