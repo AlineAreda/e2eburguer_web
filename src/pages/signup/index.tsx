@@ -136,10 +136,21 @@ export default function SignUp() {
       toast.success("Cadastro realizado com sucesso!");
       router.push("/");
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error ||
-        "Erro ao realizar cadastro. Tente novamente.";
-      toast.error(errorMessage);
+      setLoading(false);
+
+      if (error.response?.status === 409) {
+        // Tratamento específico para e-mail duplicado
+        setErrors((prev) => ({
+          ...prev,
+          email: "E-mail já cadastrado.",
+        }));
+        toast.error("E-mail já cadastrado. Tente usar outro e-mail.");
+      } else {
+        const errorMessage =
+          error.response?.data?.error ||
+          "Erro ao realizar cadastro. Tente novamente.";
+        toast.error(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -159,7 +170,7 @@ export default function SignUp() {
             data-testid="signup-logo"
           />
           <h1 className={styles.title}>Crie sua conta</h1>
-          <form 
+          <form
             onSubmit={handleSignUp}
             className={styles.signupForm}
             data-testid="signup-form"
