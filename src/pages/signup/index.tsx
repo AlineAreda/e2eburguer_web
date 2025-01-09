@@ -159,7 +159,7 @@ export default function SignUp() {
             data-testid="signup-logo"
           />
           <h1 className={styles.title}>Crie sua conta</h1>
-          <form
+          <form 
             onSubmit={handleSignUp}
             className={styles.signupForm}
             data-testid="signup-form"

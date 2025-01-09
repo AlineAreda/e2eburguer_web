@@ -4,6 +4,7 @@ import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import { AuthContext } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
+import { decodeToken } from "../utils/decodeToken";
 import styles from "../../styles/home.module.scss";
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
+
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
 
@@ -47,32 +49,36 @@ export default function Home() {
     try {
       const response = (await signIn({ email, password })) as unknown as {
         ok: boolean;
-        status?: number;
-        error?: string;
+        data: { token: string }; // Backend retorna o token
       };
 
       if (response.ok) {
-        toast.success("Login realizado com sucesso!", {
-          toastId: "success-toast",
-        });
-      } else {
-        let errorMessage =
-          "Erro ao acessar, verifique suas credenciais de acesso!";
+        const { token } = response.data;
+        const decoded = decodeToken(token); // Decodifica o token no frontend
 
-        if (response.status === 401) {
-          errorMessage = response.error || "Usuário e/ou Senha incorretos.";
-        } else if (response.status === 400) {
-          errorMessage = response.error || "E-mail e senha são obrigatórios.";
-        } else if (response.status === 500) {
-          errorMessage = response.error || "Erro interno no servidor.";
+        if (decoded && decoded.isGestao) {
+          toast.success("Login realizado com sucesso!", {
+            toastId: "success-toast",
+          });
+          localStorage.setItem("@nextauth.token", token); // Salva o token
+          window.location.href = "/dashboard"; // Redireciona para o dashboard
+        } else if (decoded && !decoded.isGestao) {
+          toast.warning("Acesse através do app!", {
+            toastId: "warning-toast",
+          });
+          localStorage.removeItem("@nextauth.token"); // Remove token inválido para web
+        } else {
+          toast.error("Token inválido. Por favor, realize o login novamente.", {
+            toastId: "error-toast",
+          });
         }
-
-        toast.error(errorMessage, {
+      } else {
+        toast.error("Erro ao acessar, verifique suas credenciais de acesso!", {
           toastId: "error-toast",
         });
       }
     } catch (error) {
-      //   toast.error("Ocorreu um erro. Tente novamente.");
+      toast.error("Ocorreu um erro. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -80,7 +86,6 @@ export default function Home() {
 
   return (
     <div className={styles.containerCenter}>
-      {/* Seção do Banner */}
       <div className={styles.banner}>
         <img
           src="/banner-e2eburguer.png"
@@ -88,8 +93,6 @@ export default function Home() {
           className={styles.bannerImage}
         />
       </div>
-
-      {/* Seção do Formulário */}
       <div className={styles.login}>
         <img src="/logo.svg" alt="Logo E2E Burguer" className={styles.logo} />
         <h1 className={styles.title}>Faça seu login</h1>
@@ -116,7 +119,6 @@ export default function Home() {
             Acessar
           </Button>
         </form>
-        {/* Link atualizado para corrigir o erro */}
         <Link href="/signup" className={styles.text}>
           Não possui uma conta? Faça seu Cadastro!
         </Link>

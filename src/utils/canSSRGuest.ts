@@ -1,22 +1,19 @@
-import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
-import { parseCookies } from 'nookies'
+import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import { parseCookies } from 'nookies';
 
-export function canSSRGuest<P extends { [key: string]: any; }>(fn: GetServerSideProps<P>) {
-  return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
+export function canSSRGuest<P extends { [key: string]: any }>(fn: GetServerSideProps<P>) {
+    return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
+        const cookies = parseCookies(ctx);
 
-    const cookies = parseCookies(ctx);
+        if (cookies['@nextauth.token']) {
+            return {
+                redirect: {
+                    destination: '/dashboard',
+                    permanent: false,
+                },
+            };
+        }
 
-
-    if(cookies['@nextauth.token']){
-      return {
-        redirect:{
-          destination: '/dashboard',
-          permanent: false,
-        },
-      }as GetServerSidePropsResult<P>;  
-    }
-
-    return await fn(ctx);
-  }
-
+        return await fn(ctx);
+    };
 }
