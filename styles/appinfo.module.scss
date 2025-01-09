@@ -1,0 +1,48 @@
+.containerCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: var(--dark-bg);
+}
+
+.bannerImage {
+  width: 100%;
+  max-width: 500px;
+}
+
+.logo {
+  margin: 20px 0;
+  width: 150px;
+}
+
+.title {
+  font-size: 1.8rem;
+  color: var(--white);
+}
+
+.text {
+  font-size: 1rem;
+  color: var(--gray-100);
+  margin: 10px 0;
+}
+
+.yellowButton {
+  background-color: var(--yellow-btn);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.yellowButton a {
+  text-decoration: none;
+  color: var(--black);
+}
+
+.yellowButton:hover {
+  background-color: var(--dark-orange);
+}
