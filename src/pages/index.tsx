@@ -64,6 +64,10 @@ export default function Home() {
           return;
         }
 
+        // Remove todas as mensagens de toast anteriores
+        toast.dismiss();
+
+        // Fluxo baseado no perfil do usuário
         if (decoded.isGestao) {
           toast.success("Login realizado com sucesso!", {
             toastId: "success-toast",
@@ -78,21 +82,17 @@ export default function Home() {
           Router.push("/app-info");
         }
       } else {
-        // Certifique-se de que o toast de credenciais inválidas é exibido apenas se o login falhar
+        toast.dismiss(); // Remove mensagens de sucesso ativas
         toast.warning("Credenciais inválidas. Verifique seu e-mail e senha.", {
           toastId: "warning-toast",
         });
       }
     } catch (error) {
       console.error("Erro no login:", error);
-      toast.error("Ocorreu um erro ao tentar logar. Tente novamente.", {
-        toastId: "error-toast",
-      });
     } finally {
       setLoading(false);
     }
   }
-
   return (
     <div className={styles.containerCenter}>
       <div className={styles.banner}>
