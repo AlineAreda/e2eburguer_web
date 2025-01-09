@@ -112,6 +112,8 @@ export default function Home() {
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="username"
+            
           />
           {emailError && <p className={styles.errorText}>{emailError}</p>}
 
@@ -121,6 +123,7 @@ export default function Home() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
           />
           {passwordError && <p className={styles.errorText}>{passwordError}</p>}
 
