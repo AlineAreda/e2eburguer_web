@@ -38,19 +38,12 @@ type AuthProviderProps = {
 
 export const AuthContext = createContext({} as AuthContextData);
 
-export function signOut(showToast = true) {
+export function signOut() {
   try {
     destroyCookie(undefined, "@nextauth.token");
-    Router.push("/");
-
-    if (showToast) {
-      toast.success("Você foi deslogado com sucesso.");
-    }
+    Router.push("/"); // Redireciona para a home
   } catch (err) {
     console.error("Erro ao deslogar:", err);
-    if (showToast) {
-      toast.error("Erro ao deslogar. Tente novamente.");
-    }
   }
 }
 
@@ -69,8 +62,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setUser({ id, name, email, isGestao });
         })
         .catch((err) => {
-          console.error("Erro ao validar token:", err);
-          signOut(false); // Não exibe toast ao deslogar durante a validação
+          console.error("Erro ao validar token:", err);          
         });
     }
   }, []);
