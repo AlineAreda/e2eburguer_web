@@ -14,8 +14,10 @@
 }
 
 .logo {
-  margin: 20px 0;
+  margin: 20px auto; /* Centraliza o logo horizontalmente */
   width: 150px;
+  display: flex; /* Garante centralização no flex */
+  justify-content: center;
 }
 
 .title {
@@ -39,8 +41,9 @@
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: 20px;
-  margin-bottom: 50px; /* Espaço maior no fim da página */
+  margin: 20px auto 50px; /* Centraliza o botão e adiciona espaçamento inferior */
+  display: flex; /* Garante centralização no flex */
+  justify-content: center;
 }
 
 .yellowButton a {
@@ -60,6 +63,11 @@
 
   .bannerImage {
     max-width: 300px; /* Reduz tamanho do banner */
+  }
+
+  .logo {
+    width: 120px; /* Reduz tamanho do logo */
+    margin: 10px auto; /* Ajusta margens para telas pequenas */
   }
 
   .title {

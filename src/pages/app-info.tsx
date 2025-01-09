@@ -12,12 +12,12 @@ export default function AppInfo() {
       </div>
       <div className={styles.login}>
         <img src="/logo.svg" alt="Logo E2E Burguer" className={styles.logo} />
-        <h1 className={styles.title}>Acesso Restrito</h1>
+        <h1 className={styles.title}>Acesso pelo APP E2E Burguer</h1>
         <p className={styles.text}>
-          Esta funcionalidade está disponível apenas no aplicativo móvel.
+          Em breve disponível funcionalidades no aplicativo móvel!.
         </p>
         <p className={styles.text}>
-          Para continuar, faça o download do nosso app.
+          Você será avisado para que faça o download do nosso app.
         </p>
         <button className={styles.yellowButton}>
           <a
