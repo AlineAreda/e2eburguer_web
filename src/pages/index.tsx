@@ -20,11 +20,9 @@ export default function Home() {
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
 
-    // Resetando erros
     setEmailError("");
     setPasswordError("");
 
-    // Validação de campos
     let hasError = false;
 
     if (email === "") {
@@ -55,7 +53,6 @@ export default function Home() {
         data: { token: string };
       };
 
-      // Checa se o login foi bem-sucedido
       if (response?.ok) {
         const { token } = response.data;
         const decoded = decodeToken(token);
@@ -67,7 +64,6 @@ export default function Home() {
           return;
         }
 
-        // Exibe toast de sucesso e redireciona com base no tipo de usuário
         if (decoded.isGestao) {
           toast.success("Login realizado com sucesso!", {
             toastId: "success-toast",
@@ -82,14 +78,13 @@ export default function Home() {
           Router.push("/app-info");
         }
       } else {
-        // Exibe toast para credenciais inválidas
+        // Certifique-se de que o toast de credenciais inválidas é exibido apenas se o login falhar
         toast.warning("Credenciais inválidas. Verifique seu e-mail e senha.", {
           toastId: "warning-toast",
         });
       }
     } catch (error) {
       console.error("Erro no login:", error);
-      // Toast genérico apenas para erros inesperados
       toast.error("Ocorreu um erro ao tentar logar. Tente novamente.", {
         toastId: "error-toast",
       });
