@@ -96,7 +96,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
     } catch (err) {
       console.error("Erro ao realizar login:", err);
-      toast.error("Credenciais inválidas. Verifique seu e-mail e senha.");
+    //  toast.error("Credenciais inválidas. Verifique seu e-mail e senha.");
     }
   }
 
