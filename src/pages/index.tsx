@@ -38,6 +38,7 @@ export default function Home() {
     }
 
     if (hasError) {
+      toast.dismiss();
       toast.warning("Preencha os campos corretamente!", {
         toastId: "warning-toast",
       });
@@ -52,47 +53,43 @@ export default function Home() {
         data: { token: string };
       };
 
-      if (response.ok) {
+      if (response?.ok) {
         const { token } = response.data;
         const decoded = decodeToken(token);
 
+        toast.dismiss(); // Remove toasts anteriores
         if (decoded && decoded.isGestao) {
-          toast.dismiss(); // Remove qualquer toast ativo
           toast.success("Login realizado com sucesso!", {
             toastId: "success-toast",
           });
           localStorage.setItem("@nextauth.token", token);
           window.location.href = "/dashboard";
         } else if (decoded && !decoded.isGestao) {
-          toast.dismiss(); // Remove qualquer toast ativo
           toast.warning("Acesse através do app!", {
             toastId: "warning-toast",
           });
           localStorage.removeItem("@nextauth.token");
           window.location.href = "/app-info";
         } else {
-          toast.dismiss(); // Remove qualquer toast ativo
+          // Exibe erro para token inválido no fluxo principal
           toast.error("Token inválido. Por favor, realize o login novamente.", {
             toastId: "error-toast",
           });
         }
       } else {
-        toast.dismiss(); // Remove qualquer toast ativo
+        // Exibe erro de credenciais inválidas no fluxo principal
+        toast.dismiss();
         toast.error("Erro ao acessar, verifique suas credenciais de acesso!", {
           toastId: "error-toast",
         });
       }
     } catch (error) {
       console.error("Erro no login:", error);
-    //  toast.dismiss(); // Remove qualquer toast ativo
-    //  toast.error("Ocorreu um erro. Tente novamente.", {
-    //    toastId: "error-toast",
-  //    });
+      // Nenhum toast será exibido no catch
     } finally {
       setLoading(false);
     }
   }
-
   return (
     <div className={styles.containerCenter}>
       <div className={styles.banner}>
@@ -113,7 +110,6 @@ export default function Home() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="username"
-            
           />
           {emailError && <p className={styles.errorText}>{emailError}</p>}
 
