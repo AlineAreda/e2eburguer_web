@@ -8,7 +8,7 @@ type AuthContextData = {
   user: UserProps | undefined;
   isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<void>;
-  signOut: (showToast?: boolean) => void;
+  signOut: () => void;
   signUp: (credentials: SignUpProps) => Promise<void>;
 };
 
@@ -16,7 +16,7 @@ type UserProps = {
   id: string;
   name: string;
   email: string;
-  isGestao?: boolean; // Inclui o campo isGestao opcional
+  isGestao?: boolean;
 };
 
 type SignInProps = {
@@ -41,7 +41,7 @@ export const AuthContext = createContext({} as AuthContextData);
 export function signOut() {
   try {
     destroyCookie(undefined, "@nextauth.token");
-    Router.push("/"); // Redireciona para a home
+    Router.push("/");
   } catch (err) {
     console.error("Erro ao deslogar:", err);
   }
@@ -62,7 +62,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setUser({ id, name, email, isGestao });
         })
         .catch((err) => {
-          console.error("Erro ao validar token:", err);          
+          console.error("Erro ao validar token:", err);
+          signOut();
         });
     }
   }, []);
@@ -72,18 +73,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const response = await api.post("/session", { email, password });
       const { id, name, token, isGestao } = response.data;
 
-      // Armazena o token nos cookies
       setCookie(undefined, "@nextauth.token", token, {
-        maxAge: 60 * 60 * 24 * 30, // 30 dias
+        maxAge: 60 * 60 * 24 * 30,
         path: "/",
       });
 
-      // Atualiza o estado do usuário
       setUser({ id, name, email, isGestao });
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
-      // Exibe mensagens de sucesso ou direciona para app-info
-      toast.dismiss(); // Remove mensagens ativas
+      toast.dismiss();
       if (isGestao) {
         toast.success("Login realizado com sucesso!");
         Router.push("/dashboard");
