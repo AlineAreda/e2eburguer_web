@@ -5,6 +5,7 @@
   justify-content: center;
   height: 100vh;
   background-color: var(--dark-bg);
+  padding: 20px;
 }
 
 .bannerImage {
@@ -20,12 +21,15 @@
 .title {
   font-size: 1.8rem;
   color: var(--white);
+  text-align: center; /* Centraliza o texto */
+  margin-top: 20px; /* Espaço abaixo do banner */
 }
 
 .text {
   font-size: 1rem;
   color: var(--gray-100);
-  margin: 10px 0;
+  text-align: center; /* Centraliza o texto */
+  margin: 10px 0 30px 0; /* Espaço maior entre o texto e o botão */
 }
 
 .yellowButton {
@@ -36,6 +40,7 @@
   font-size: 1rem;
   cursor: pointer;
   margin-top: 20px;
+  margin-bottom: 50px; /* Espaço maior no fim da página */
 }
 
 .yellowButton a {
@@ -45,4 +50,30 @@
 
 .yellowButton:hover {
   background-color: var(--dark-orange);
+}
+
+/* Responsividade */
+@media (max-width: 620px) {
+  .containerCenter {
+    padding: 10px; /* Ajusta padding para telas menores */
+  }
+
+  .bannerImage {
+    max-width: 300px; /* Reduz tamanho do banner */
+  }
+
+  .title {
+    font-size: 1.4rem; /* Reduz tamanho do título */
+    margin-top: 10px; /* Ajusta espaço acima do título */
+  }
+
+  .text {
+    font-size: 0.9rem; /* Reduz tamanho do texto */
+    margin: 10px 0 20px 0; /* Ajusta margens para textos */
+  }
+
+  .yellowButton {
+    padding: 8px 16px; /* Ajusta o tamanho do botão */
+    font-size: 0.9rem; /* Reduz tamanho da fonte do botão */
+  }
 }

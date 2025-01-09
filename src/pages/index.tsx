@@ -57,29 +57,34 @@ export default function Home() {
         const decoded = decodeToken(token);
 
         if (decoded && decoded.isGestao) {
+          toast.dismiss(); // Remove qualquer toast ativo
           toast.success("Login realizado com sucesso!", {
             toastId: "success-toast",
           });
           localStorage.setItem("@nextauth.token", token);
           window.location.href = "/dashboard";
         } else if (decoded && !decoded.isGestao) {
+          toast.dismiss(); // Remove qualquer toast ativo
           toast.warning("Acesse através do app!", {
             toastId: "warning-toast",
           });
           localStorage.removeItem("@nextauth.token");
           window.location.href = "/app-info";
         } else {
+          toast.dismiss(); // Remove qualquer toast ativo
           toast.error("Token inválido. Por favor, realize o login novamente.", {
             toastId: "error-toast",
           });
         }
       } else {
+        toast.dismiss(); // Remove qualquer toast ativo
         toast.error("Erro ao acessar, verifique suas credenciais de acesso!", {
           toastId: "error-toast",
         });
       }
     } catch (error) {
       console.error("Erro no login:", error);
+      toast.dismiss(); // Remove qualquer toast ativo
       toast.error("Ocorreu um erro. Tente novamente.", {
         toastId: "error-toast",
       });
