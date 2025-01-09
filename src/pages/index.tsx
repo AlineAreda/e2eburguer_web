@@ -25,7 +25,7 @@ export default function Home() {
 
     let hasError = false;
 
-    if (email === "") {
+    if (email.trim() === "") {
       setEmailError("O campo de e-mail é obrigatório.");
       hasError = true;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -33,7 +33,7 @@ export default function Home() {
       hasError = true;
     }
 
-    if (password === "") {
+    if (password.trim() === "") {
       setPasswordError("O campo de senha é obrigatório.");
       hasError = true;
     }
@@ -66,10 +66,8 @@ export default function Home() {
           return;
         }
 
-        // Remove todas as mensagens de toast anteriores
         toast.dismiss();
 
-        // Fluxo baseado no perfil do usuário
         if (decoded.isGestao) {
           toast.success("Login realizado com sucesso!", {
             toastId: "success-toast",
