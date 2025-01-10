@@ -7,12 +7,9 @@ import styles from "../../../styles/signup.module.scss";
 import { Input } from "../../components/ui/Input";
 import { Button } from "../../components/ui/Button";
 import { AuthContext } from "../../contexts/AuthContext";
-import { toast } from "react-toastify";
-import { useRouter } from "next/router";
 
 export default function SignUp() {
   const { signUp } = useContext(AuthContext);
-  const router = useRouter();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -125,35 +122,14 @@ export default function SignUp() {
     }
 
     if (hasError) {
-      toast.warning("Preencha os campos corretamente!");
       return;
     }
 
     setLoading(true);
 
-    try {
-      await signUp({ name, email, password, confirmPassword, isGestao });
-      toast.success("Cadastro realizado com sucesso!");
-      router.push("/");
-    } catch (error: any) {
-      setLoading(false);
+    await signUp({ name, email, password, confirmPassword, isGestao });
 
-      if (error.response?.status === 409) {
-        // Tratamento específico para e-mail duplicado
-        setErrors((prev) => ({
-          ...prev,
-          email: "E-mail já cadastrado.",
-        }));
-        toast.error("E-mail já cadastrado. Tente usar outro e-mail.");
-      } else {
-        const errorMessage =
-          error.response?.data?.error ||
-          "Erro ao realizar cadastro. Tente novamente.";
-        toast.error(errorMessage);
-      }
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   }
 
   return (
@@ -177,7 +153,7 @@ export default function SignUp() {
           >
             <Input
               id="signup-name"
-              placeholder="Digite seu nome"
+              placeholder="Digite seu nome e sobrenome"
               value={name}
               onChange={(e) => setName(e.target.value)}
               data-testid="input-name"
@@ -195,7 +171,7 @@ export default function SignUp() {
 
             <Input
               id="signup-password"
-              placeholder="Sua senha"
+              placeholder="Digite sua senha"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
